@@ -33,7 +33,7 @@ const CompoundInterestCalculator = () => {
     
     // Cálculo mensal ao longo dos anos
     for (let i = 0; i < years * 12; i++) {
-      futureValue = futureValue * (1 + rate/12) + monthly;
+      futureValue = futureValue * (1 + rate) + monthly;
       invested += monthly;
     }
     
