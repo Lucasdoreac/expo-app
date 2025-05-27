@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
+import {
+  View,
+  Text,
+  StyleSheet,
   TouchableOpacity,
   Platform
 } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { COLORS } from '../styles/globalStyles';
-
-
+import TriangleVisualization from './TriangleVisualization';
 
 const RiskReturnLiquidity = () => {
   // Estados para os valores de cada dimensão
   const [risk, setRisk] = useState(30);
   const [return_, setReturn] = useState(30);
   const [liquidity, setLiquidity] = useState(70);
-  
+
   // Estados para armazenar a classe de investimento recomendada
   const [recommendedClass, setRecommendedClass] = useState(null);
   const [otherOptions, setOtherOptions] = useState([]);
-  
+
   // Classes de investimentos com seus perfis característicos
   const investmentClasses = [
     {
@@ -94,12 +93,12 @@ const RiskReturnLiquidity = () => {
       description: "Ações de empresas menores com maior potencial de crescimento e risco."
     }
   ];
-  
+
   // Atualiza a recomendação quando os valores são alterados
   useEffect(() => {
     updateRecommendation();
   }, [risk, return_, liquidity]);
-  
+
   // Encontra a classe de investimento mais adequada baseada nos valores do triângulo
   const updateRecommendation = () => {
     // Calcula a "distância" entre as preferências do usuário e cada classe de investimento
@@ -107,27 +106,27 @@ const RiskReturnLiquidity = () => {
       const riskDiff = Math.abs(risk - investClass.risk);
       const returnDiff = Math.abs(return_ - investClass.return_);
       const liquidityDiff = Math.abs(liquidity - investClass.liquidity);
-      
+
       // Pontuação total (menor é melhor)
       const totalDistance = riskDiff + returnDiff + liquidityDiff;
-      
+
       return {
         ...investClass,
         distance: totalDistance
       };
     });
-    
+
     // Ordena por distância (do menor para o maior)
     const sortedOptions = [...distances].sort((a, b) => a.distance - b.distance);
-    
+
     // Define a classe mais adequada e outras opções
     setRecommendedClass(sortedOptions[0]);
     setOtherOptions(sortedOptions.slice(1, 4)); // Próximas 3 opções
   };
-  
+
   // Templates pré-definidos para diferentes perfis
   const applyTemplate = (template) => {
-    switch(template) {
+    switch (template) {
       case 'conservador':
         setRisk(20);
         setReturn(30);
@@ -147,113 +146,126 @@ const RiskReturnLiquidity = () => {
         break;
     }
   };
-  
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>🔄 Triângulo Risco-Retorno-Liquidez</Text>
       <Text style={styles.description}>
         Ajuste os controles abaixo para encontrar investimentos que combinem com suas preferências.
       </Text>
-      
+
       <View style={styles.templateButtons}>
-        <TouchableOpacity 
-          style={[styles.templateButton, styles.conservativeButton]} 
+        <TouchableOpacity
+          style={[styles.templateButton, styles.conservativeButton]}
           onPress={() => applyTemplate('conservador')}
         >
           <Text style={styles.templateButtonText}>Conservador</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={[styles.templateButton, styles.moderateButton]} 
+
+        <TouchableOpacity
+          style={[styles.templateButton, styles.moderateButton]}
           onPress={() => applyTemplate('moderado')}
         >
           <Text style={styles.templateButtonText}>Moderado</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={[styles.templateButton, styles.aggressiveButton]} 
+
+        <TouchableOpacity
+          style={[styles.templateButton, styles.aggressiveButton]}
           onPress={() => applyTemplate('arrojado')}
         >
           <Text style={styles.templateButtonText}>Arrojado</Text>
         </TouchableOpacity>
       </View>
-      
+
       <View style={styles.sliderContainer}>
         <Text style={styles.sliderLabel}>
           Risco: <Text style={styles.sliderValue}>{risk}%</Text>
         </Text>
         <Slider
+          key={`risk-${risk}`}
           minimumValue={0}
           maximumValue={100}
           value={risk}
           onValueChange={setRisk}
           step={5}
           minimumTrackTintColor={COLORS.primaryDark}
-          maximumTrackTintColor="#e0e0e0"
-          thumbTintColor={COLORS.white}
-          style={{ height: 40 }}
+          maximumTrackTintColor="#d1d5db"
+          thumbStyle={styles.sliderThumb}
+          trackStyle={styles.sliderTrack}
+          style={styles.slider}
         />
         <View style={styles.sliderLegend}>
-          <Text>Menor</Text>
-          <Text>Maior</Text>
+          <Text style={styles.legendText}>🛡️ Baixo Risco</Text>
+          <Text style={styles.legendText}>⚡ Alto Risco</Text>
         </View>
       </View>
-      
+
       <View style={styles.sliderContainer}>
         <Text style={styles.sliderLabel}>
-          Retorno Potencial: <Text style={styles.sliderValue}>{return_}%</Text>
+          Potencial de retorno: <Text style={styles.sliderValue}>{return_}%</Text>
         </Text>
         <Slider
+          key={`return-${return_}`}
           minimumValue={0}
           maximumValue={100}
           value={return_}
           onValueChange={setReturn}
           step={5}
           minimumTrackTintColor={COLORS.primaryDark}
-          maximumTrackTintColor="#e0e0e0"
-          thumbTintColor={COLORS.white}
-          style={{ height: 40 }}
+          maximumTrackTintColor="#d1d5db"
+          thumbStyle={styles.sliderThumb}
+          trackStyle={styles.sliderTrack}
+          style={styles.slider}
         />
         <View style={styles.sliderLegend}>
-          <Text>Menor</Text>
-          <Text>Maior</Text>
+          <Text style={styles.legendText}>📉 Menor Retorno</Text>
+          <Text style={styles.legendText}>📈 Maior Retorno</Text>
         </View>
       </View>
-      
+
       <View style={styles.sliderContainer}>
         <Text style={styles.sliderLabel}>
           Liquidez: <Text style={styles.sliderValue}>{liquidity}%</Text>
         </Text>
         <Slider
+          key={`liquidity-${liquidity}`}
           minimumValue={0}
           maximumValue={100}
           value={liquidity}
           onValueChange={setLiquidity}
           step={5}
           minimumTrackTintColor={COLORS.primaryDark}
-          maximumTrackTintColor="#e0e0e0"
-          thumbTintColor={COLORS.white}
-          style={{ height: 40 }}
+          maximumTrackTintColor="#d1d5db"
+          thumbStyle={styles.sliderThumb}
+          trackStyle={styles.sliderTrack}
+          style={styles.slider}
         />
         <View style={styles.sliderLegend}>
-          <Text>Menor</Text>
-          <Text>Maior</Text>
+          <Text style={styles.legendText}>🔒 Menos Líquido</Text>
+          <Text style={styles.legendText}>💧 Mais Líquido</Text>
         </View>
       </View>
-      
+
       {recommendedClass && (
         <View style={styles.recommendationContainer}>
-          <Text style={styles.recommendationTitle}>Investimento Recomendado:</Text>
+          <Text style={styles.recommendationTitle}>Investimento recomendado:</Text>
           <Text style={styles.recommendedClass}>{recommendedClass.name}</Text>
           <Text style={styles.recommendationDescription}>{recommendedClass.description}</Text>
-          
+
           <Text style={styles.otherOptionsTitle}>Outras Opções Compatíveis:</Text>
           {otherOptions.map((option, index) => (
             <Text key={index} style={styles.otherOption}>• {option.name}</Text>
           ))}
         </View>
       )}
-      
+
+      {/* Visualização do Triângulo Impossível */}
+      <TriangleVisualization 
+        risk={risk}
+        return={return_}
+        liquidity={liquidity}
+      />
+
       <View style={styles.infoBox}>
         <Text style={styles.infoTitle}>💡 Entendendo o Triângulo</Text>
         <Text style={styles.infoText}>
@@ -326,22 +338,56 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   sliderContainer: {
-    marginBottom: 20,
+    marginBottom: 25,
+    backgroundColor: '#f8f9fa',
+    borderRadius: 8,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: '#e9ecef',
   },
   sliderLabel: {
     fontSize: 16,
-    marginBottom: 10,
+    marginBottom: 15,
     color: COLORS.primaryDark,
+    fontWeight: '600',
   },
   sliderValue: {
     fontWeight: 'bold',
+    fontSize: 18,
+    color: COLORS.primaryDark,
   },
-
+  slider: {
+    height: 50,
+    marginVertical: 10,
+  },
+  sliderThumb: {
+    backgroundColor: COLORS.primaryDark,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 3,
+    borderColor: '#ffffff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+  sliderTrack: {
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#e9ecef',
+  },
   sliderLegend: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    marginTop: 5,
+    paddingHorizontal: 5,
+    marginTop: 8,
+  },
+  legendText: {
+    fontSize: 12,
+    color: '#6b7280',
+    fontWeight: '500',
   },
   recommendationContainer: {
     backgroundColor: COLORS.primaryLight,

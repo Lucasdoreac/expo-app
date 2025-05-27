@@ -14,32 +14,37 @@ const BarChart = ({ data, maxValue, barColor, barWidth }) => {
   return (
     <View style={styles.barChartContainer}>
       {data.map((item, index) => {
-        // Calcula a altura relativa da barra
-        const barHeight = `${(item.value / maxValue) * 100}%`;
+        // Calcula a altura relativa da barra (mínimo 5% para visibilidade)
+        const barHeight = Math.max((item.value / maxValue) * 100, 5);
         
         return (
           <View key={index} style={styles.barContainer}>
-            <View style={styles.barLabelContainer}>
-              <Text style={styles.barLabel}>
-                {item.label}
+            {/* Valor acima da barra */}
+            <View style={styles.barValueContainer}>
+              <Text style={styles.barValue}>
+                {item.displayValue}
               </Text>
             </View>
+            
+            {/* Barra do gráfico */}
             <View style={styles.barWrapper}>
               <View 
                 style={[
                   styles.bar, 
                   { 
-                    height: barHeight,
+                    height: `${barHeight}%`,
                     backgroundColor: barColor,
-                    width: barWidth || 25,
+                    width: barWidth || 30,
                   }
                 ]} 
               />
-              <View style={styles.barValueContainer}>
-                <Text style={styles.barValue}>
-                  {item.displayValue}
-                </Text>
-              </View>
+            </View>
+            
+            {/* Label abaixo da barra */}
+            <View style={styles.barLabelContainer}>
+              <Text style={styles.barLabel}>
+                {item.label}
+              </Text>
             </View>
           </View>
         );
@@ -328,51 +333,59 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   chartContainer: {
-    height: 250,
+    height: 300,
     marginVertical: 20,
-    paddingBottom: 30,
+    paddingBottom: 40,
+    paddingTop: 30,
   },
   barChartContainer: {
     height: '100%',
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'flex-end',
-    paddingLeft: 10,
+    paddingHorizontal: 15,
   },
   barContainer: {
     alignItems: 'center',
-    marginHorizontal: 10,
+    marginHorizontal: 5,
     height: '100%',
+    justifyContent: 'space-between',
   },
   barWrapper: {
-    height: '85%',
+    height: '70%',
     justifyContent: 'flex-end',
+    alignItems: 'center',
+    position: 'relative',
   },
   bar: {
-    width: 25,
+    width: 30,
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
+    minHeight: 5,
   },
   barLabelContainer: {
-    position: 'absolute',
-    bottom: -25,
-    width: 60,
+    width: 70,
     alignItems: 'center',
+    marginTop: 10,
   },
   barLabel: {
-    fontSize: 12,
+    fontSize: 11,
     color: '#666',
     textAlign: 'center',
+    fontWeight: '500',
   },
   barValueContainer: {
-    position: 'absolute',
-    top: -25,
-    width: 90,
+    width: 80,
     alignItems: 'center',
+    marginBottom: 8,
+    minHeight: 20,
   },
   barValue: {
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: 'bold',
     color: COLORS.primaryDark,
+    textAlign: 'center',
+    lineHeight: 12,
   },
   detailContainer: {
     backgroundColor: '#f9f9f9',

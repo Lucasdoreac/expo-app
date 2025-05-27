@@ -5,57 +5,12 @@ import {
   StyleSheet, 
   ScrollView, 
   TouchableOpacity,
-  SafeAreaView,
-  Image,
-  Platform
+  SafeAreaView
 } from 'react-native';
-
-// Importações condicionais baseadas na plataforma
-let PieChart, SVGText;
-if (Platform.OS === 'web') {
-  // Na web, use nosso componente personalizado
-  PieChart = require('../components/WebPieChart').default;
-  SVGText = Text; // Fallback para o Text padrão
-} else {
-  // Em dispositivos móveis, use react-native-svg-charts
-  try {
-    const svgCharts = require('react-native-svg-charts');
-    const svg = require('react-native-svg');
-    PieChart = svgCharts.PieChart;
-    SVGText = svg.Text;
-  } catch (err) {
-    // Fallback caso a biblioteca não esteja disponível
-    console.warn('react-native-svg-charts não disponível:', err);
-    PieChart = require('../components/WebPieChart').default;
-    SVGText = Text;
-  }
-}
 import { COLORS, globalStyles } from '../styles/globalStyles';
 import InvestmentGrowthChart from '../components/InvestmentGrowthChart';
 import AutomatedInvestmentSimulator from '../components/AutomatedInvestmentSimulator';
-
-// Componente para exibir rótulos dentro do gráfico de pizza (apenas para dispositivos móveis)
-const Labels = Platform.OS !== 'web' 
-  ? ({ slices }) => {
-      return slices.map((slice, index) => {
-        const { pieCentroid, data } = slice;
-        return (
-          <SVGText
-            key={index}
-            x={pieCentroid[0]}
-            y={pieCentroid[1]}
-            fill="white"
-            textAnchor="middle"
-            alignmentBaseline="middle"
-            fontSize={14}
-            fontWeight="bold"
-          >
-            {data.value}%
-          </SVGText>
-        );
-      });
-    }
-  : () => null; // Na web, os rótulos são tratados dentro do WebPieChart
+import SimplePieChart from '../components/SimplePieChart';
 
 const Chapter5Screen = ({ navigation }) => {
   return (
@@ -213,43 +168,34 @@ const Chapter5Screen = ({ navigation }) => {
           <Text style={styles.sectionTitle}>📊 Composição da Carteira para Iniciantes</Text>
           
           <View style={styles.compositionContainer}>
-            <Text style={styles.sectionTitle}>Composição de Carteira Modelo</Text>
+            <Text style={styles.compositionTitle}>Composição de Carteira Modelo</Text>
             <View style={styles.chartRow}>
               <View style={styles.pieChartContainer}>
-                <PieChart
-                  style={{ height: 200, width: 200 }}
-                  valueAccessor={Platform.OS !== 'web' ? ({ item }) => item.value : undefined}
-                  innerRadius={Platform.OS !== 'web' ? '45%' : undefined}
-                  outerRadius={Platform.OS !== 'web' ? '90%' : undefined}
+                <SimplePieChart
+                  size={200}
                   data={[
                     {
                       key: 1,
                       value: 65,
-                      svg: { fill: COLORS.primaryDark },
-                      arc: Platform.OS !== 'web' ? { outerRadius: '100%', padAngle: 0.01 } : undefined
+                      color: COLORS.primaryDark,
                     },
                     {
                       key: 2,
                       value: 20,
-                      svg: { fill: '#4CAF50' },
-                      arc: Platform.OS !== 'web' ? { outerRadius: '100%', padAngle: 0.01 } : undefined
+                      color: '#4CAF50',
                     },
                     {
                       key: 3,
                       value: 10,
-                      svg: { fill: '#FFC107' },
-                      arc: Platform.OS !== 'web' ? { outerRadius: '100%', padAngle: 0.01 } : undefined
+                      color: '#FFC107',
                     },
                     {
                       key: 4,
                       value: 5,
-                      svg: { fill: '#9C27B0' },
-                      arc: Platform.OS !== 'web' ? { outerRadius: '100%', padAngle: 0.01 } : undefined
+                      color: '#9C27B0',
                     }
                   ]}
-                >
-                  {Platform.OS !== 'web' && <Labels />}
-                </PieChart>
+                />
               </View>
               
               <View style={styles.pieLabelsContainer}>
@@ -349,10 +295,10 @@ const Chapter5Screen = ({ navigation }) => {
             </TouchableOpacity>
             
             <TouchableOpacity 
-              style={[styles.navButton, styles.homeButton]}
-              onPress={() => navigation.navigate('Home')}
+              style={[styles.navButton, styles.nextButton]}
+              onPress={() => navigation.navigate('Chapter6')}
             >
-              <Text style={styles.homeButtonText}>Início</Text>
+              <Text style={styles.nextButtonText}>Capítulo 6 →</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -487,7 +433,7 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   compositionContainer: {
-    flexDirection: 'column', // Mudar para coluna em vez de linha
+    flexDirection: 'column',
     alignItems: 'center',
     marginBottom: 20,
     backgroundColor: '#f9f9f9',
@@ -495,6 +441,13 @@ const styles = StyleSheet.create({
     padding: 15,
     paddingBottom: 20,
     paddingTop: 20,
+  },
+  compositionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: COLORS.primaryDark,
+    marginBottom: 15,
+    textAlign: 'center',
   },
   chartRow: {
     flexDirection: 'row',
@@ -596,14 +549,14 @@ const styles = StyleSheet.create({
   prevButton: {
     backgroundColor: '#f0f0f0',
   },
-  homeButton: {
+  nextButton: {
     backgroundColor: COLORS.primaryDark,
   },
   prevButtonText: {
     fontWeight: 'bold',
     color: '#555',
   },
-  homeButtonText: {
+  nextButtonText: {
     fontWeight: 'bold',
     color: COLORS.white,
   },
