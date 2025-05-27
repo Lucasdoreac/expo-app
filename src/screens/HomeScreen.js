@@ -85,6 +85,39 @@ const HomeScreen = ({ navigation }) => {
             Entenda como os investimentos de maior risco podem complementar sua estratégia a longo prazo.
           </Text>
         </TouchableOpacity>
+        
+        <TouchableOpacity 
+          style={styles.chapterCard}
+          onPress={() => navigation.navigate('Chapter6')}
+        >
+          <Text style={styles.chapterNumber}>Capítulo 6</Text>
+          <Text style={styles.chapterTitle}>Fundos de Investimento</Text>
+          <Text style={styles.chapterDescription}>
+            Aprenda sobre fundos de investimento e como eles podem simplificar e diversificar sua carteira.
+          </Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity 
+          style={styles.chapterCard}
+          onPress={() => navigation.navigate('Chapter7')}
+        >
+          <Text style={styles.chapterNumber}>Capítulo 7</Text>
+          <Text style={styles.chapterTitle}>Impostos e Tributação</Text>
+          <Text style={styles.chapterDescription}>
+            Entenda como os impostos afetam seus investimentos e como otimizar sua carga tributária.
+          </Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity 
+          style={styles.chapterCard}
+          onPress={() => navigation.navigate('Chapter8')}
+        >
+          <Text style={styles.chapterNumber}>Capítulo 8</Text>
+          <Text style={styles.chapterTitle}>Conclusão: Colocando Tudo em Prática</Text>
+          <Text style={styles.chapterDescription}>
+            Revise os pilares da jornada do investidor e dicas finais para investir com sabedoria.
+          </Text>
+        </TouchableOpacity>
 
         <View style={styles.tipContainer}>
           <Text style={styles.tipTitle}>💡 Dica Financeira</Text>

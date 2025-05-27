@@ -291,7 +291,7 @@ const Chapter7Screen = ({ navigation }) => {
               style={[styles.navButton, styles.nextButton]}
               onPress={() => navigation.navigate('Chapter8')}
             >
-              <Text style={styles.nextButtonText}>Capítulo 8 →</Text>
+              <Text style={styles.nextButtonText}>Conclusão →</Text>
             </TouchableOpacity>
           </View>
         </View>

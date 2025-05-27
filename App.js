@@ -17,6 +17,7 @@ import Chapter4Screen from './src/screens/Chapter4Screen';
 import Chapter5Screen from './src/screens/Chapter5Screen';
 import Chapter6Screen from './src/screens/Chapter6Screen';
 import Chapter7Screen from './src/screens/Chapter7Screen';
+import Chapter8Screen from './src/screens/Chapter8Screen';
 
 // Criação do stack navigator
 const Stack = createStackNavigator();
@@ -170,6 +171,14 @@ export default function App() {
           }} 
         />
 
+        <Stack.Screen 
+          name="Chapter8" 
+          component={Chapter8Screen} 
+          options={{ 
+            title: 'Capítulo 8',
+            headerBackTitle: 'Voltar',
+          }} 
+        />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
