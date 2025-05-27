@@ -72,6 +72,22 @@ O aplicativo aborda os seguintes tópicos:
    - Fundos indexados para iniciantes
    - Estratégia de custo médio
 
+6. **Fundos de Investimento - Descomplicando**
+   - Tipos de fundos (DI, Renda Fixa, Multimercado, Ações, FIIs, ETFs)
+   - Vantagens, desvantagens e custos
+   - Como escolher e comparar fundos
+
+7. **Impostos e Tributação nos Investimentos**
+   - Imposto de Renda (tabela regressiva)
+   - IOF (Imposto sobre Operações Financeiras)
+   - Come-cotas em fundos
+   - Estratégias de otimização fiscal
+
+8. **Conclusão: Próximos Passos na Jornada**
+   - Pilares do investidor de sucesso
+   - Dicas práticas para consolidação de hábitos
+   - Mentalidade para o longo prazo
+
 ## 🚀 Como Iniciar
 
 ### Pré-requisitos
@@ -111,15 +127,15 @@ O aplicativo aborda os seguintes tópicos:
 
 Permite que o usuário visualize o poder dos juros compostos ao longo do tempo, com valores iniciais a partir de R$30.
 
-### Questionário de Perfil de Investidor (Em desenvolvimento)
+### Questionário de Perfil de Investidor
 
 Ajuda o usuário a identificar seu perfil de risco e as estratégias de investimento mais adequadas.
 
-### Comparador de Produtos Financeiros (Em desenvolvimento)
+### Comparador de Produtos Financeiros
 
 Ferramenta que compara diferentes opções de investimento em renda fixa, destacando rentabilidade, prazos, riscos e impostos.
 
-### Ajustador de Risco-Retorno-Liquidez (Em desenvolvimento)
+### Ajustador de Risco-Retorno-Liquidez
 
 Visualização interativa da relação entre estes três fatores cruciais em investimentos.
 
