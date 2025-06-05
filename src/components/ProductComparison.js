@@ -3,10 +3,10 @@ import {
   View, 
   Text, 
   StyleSheet, 
-  TouchableOpacity,
-  ScrollView
+  TouchableOpacity
 } from 'react-native';
 import { COLORS } from '../styles/globalStyles';
+import { useLegacyColors } from '../contexts/ThemeContext';
 
 const ProductComparison = () => {
   const [selectedCategory, setSelectedCategory] = useState('tesouro');
@@ -195,7 +195,7 @@ const ProductComparison = () => {
         </TouchableOpacity>
       </View>
       
-      <ScrollView style={styles.productsContainer}>
+      <View style={styles.productsContainer}>
         {getSelectedProducts().map((product, index) => (
           <View key={index} style={styles.productCard}>
             <Text style={styles.productName}>{product.name}</Text>
@@ -254,7 +254,7 @@ const ProductComparison = () => {
             </View>
           </View>
         ))}
-      </ScrollView>
+      </View>
       
       <View style={styles.infoBox}>
         <Text style={styles.infoTitle}>💡 Dica</Text>
@@ -313,12 +313,13 @@ const styles = StyleSheet.create({
   categoryButtonText: {
     fontWeight: 'bold',
     color: '#555',
+    fontSize: 12,
   },
   selectedCategoryButtonText: {
     color: COLORS.white,
   },
   productsContainer: {
-    maxHeight: 500,
+    // Removido maxHeight e ScrollView - agora usa View normal
   },
   productCard: {
     backgroundColor: '#f9f9f9',
@@ -340,15 +341,18 @@ const styles = StyleSheet.create({
   detailRow: {
     flexDirection: 'row',
     marginBottom: 5,
+    flexWrap: 'wrap',
   },
   detailLabel: {
     fontWeight: 'bold',
     width: '40%',
     fontSize: 14,
+    minWidth: 120,
   },
   detailValue: {
     flex: 1,
     fontSize: 14,
+    flexShrink: 1,
   },
   prosConsContainer: {
     marginTop: 10,
@@ -363,6 +367,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 3,
     paddingLeft: 5,
+    lineHeight: 20,
   },
   prosContainer: {
     marginBottom: 10,

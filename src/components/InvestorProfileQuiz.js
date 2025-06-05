@@ -3,10 +3,11 @@ import {
   View, 
   Text, 
   StyleSheet, 
-  TouchableOpacity,
-  ScrollView
+  TouchableOpacity
 } from 'react-native';
 import { COLORS } from '../styles/globalStyles';
+import { useLegacyColors } from '../contexts/ThemeContext';
+import AnalyticsService from '../services/AnalyticsService';
 
 const InvestorProfileQuiz = ({ onProfileDetermined }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -102,8 +103,14 @@ const InvestorProfileQuiz = ({ onProfileDetermined }) => {
   };
   
   // Calcula o perfil baseado nas respostas
-  const calculateProfile = (answers) => {
+  const calculateProfile = async (answers) => {
     const totalPoints = answers.reduce((sum, points) => sum + points, 0);
+    
+    // 📊 ANALYTICS: Quiz iniciado
+    await AnalyticsService.logEvent(AnalyticsService.EVENTS.QUIZ_STARTED, {
+      total_questions: questions.length,
+      quiz_type: 'investor_profile'
+    });
     
     // Determina o perfil com base no total de pontos
     const determinedProfile = profiles.find(
@@ -112,6 +119,23 @@ const InvestorProfileQuiz = ({ onProfileDetermined }) => {
     
     setProfile(determinedProfile);
     setQuizCompleted(true);
+    
+    // 📊 ANALYTICS: Quiz completado + Perfil identificado
+    await AnalyticsService.logQuizCompleted(determinedProfile.type);
+    await AnalyticsService.logEvent(AnalyticsService.EVENTS.PROFILE_IDENTIFIED, {
+      profile_type: determinedProfile.type,
+      profile_name: determinedProfile.name,
+      total_points: totalPoints,
+      answers_count: answers.length
+    });
+    
+    // Configurar propriedades do usuário para personalização
+    await AnalyticsService.setUserProfile({
+      type: determinedProfile.type,
+      experience: determinedProfile.experience || 'calculado',
+      goal: 'educacao_financeira',
+      firstAccess: new Date().toISOString()
+    });
     
     // Notifica o componente pai sobre o perfil determinado
     if (onProfileDetermined) {
@@ -153,14 +177,14 @@ const InvestorProfileQuiz = ({ onProfileDetermined }) => {
         <View style={styles.resultContainer}>
           <View style={styles.profileHeader}>
             <Text style={styles.profileTitle}>Seu Perfil de Investidor:</Text>
-            <Text style={styles.profileType}>{profile.type}</Text>
+            <Text style={styles.profileType}>{profile?.type || 'Calculando...'}</Text>
           </View>
           
           <View style={styles.profileDetails}>
-            <Text style={styles.profileDescription}>{profile.description}</Text>
+            <Text style={styles.profileDescription}>{profile?.description || ''}</Text>
             
             <Text style={styles.recommendationTitle}>📊 Recomendações para seu perfil:</Text>
-            <Text style={styles.recommendationText}>{profile.recommendation}</Text>
+            <Text style={styles.recommendationText}>{profile?.recommendation || ''}</Text>
             
             <View style={styles.riskMeter}>
               <Text style={styles.riskMeterLabel}>Nível de Risco:</Text>
@@ -169,8 +193,8 @@ const InvestorProfileQuiz = ({ onProfileDetermined }) => {
                   style={[
                     styles.riskMeterFill, 
                     { 
-                      width: `${profile.type === 'Conservador' ? 30 : 
-                              profile.type === 'Moderado' ? 65 : 95}%`
+                      width: `${profile?.type === 'Conservador' ? 30 : 
+                              profile?.type === 'Moderado' ? 65 : 95}%`
                     }
                   ]} 
                 />

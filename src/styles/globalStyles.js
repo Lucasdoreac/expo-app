@@ -11,14 +11,51 @@ if (Platform.OS === 'web') {
 
 // Paleta de cores conforme especificado no Prompt Master
 export const COLORS = {
+  primary: '#2c3e50',      // Azul marinho (adicionado primary)
   primaryLight: '#b4e0e8', // Azul claro
   primaryDark: '#2c3e50',  // Azul marinho
+  secondary: '#3498db',    // Azul médio para botões (ADICIONADO)
+  accent: '#4ECDC4',       // Verde-azulado para destaques
   white: '#ffffff',
   black: '#000000',
   gray: '#f0f0f0',
   success: '#4CAF50',
   warning: '#FFC107',
   danger: '#F44336',
+  
+  // Cores específicas para elementos
+  text: '#000000',
+  textSecondary: '#666666',
+  background: '#ffffff',
+  surface: '#ffffff',
+  cardBackground: '#ffffff',
+  shadow: '#000000',
+  lightGray: '#e0e0e0',
+};
+
+// Paleta de cores para Dark Mode
+export const DARK_COLORS = {
+  primary: '#3498db',      // Azul mais claro para dark mode
+  primaryLight: '#5dade2', // Azul claro
+  primaryDark: '#1b2631',  // Azul muito escuro para headers
+  secondary: '#5dade2',    // Azul médio
+  accent: '#4ECDC4',       // Verde-azulado (mantém)
+  white: '#ffffff',
+  black: '#000000',
+  gray: '#2c3e50',         // Cinza escuro
+  success: '#58d68d',      // Verde mais claro
+  warning: '#f4d03f',      // Amarelo mais claro
+  danger: '#ec7063',       // Vermelho mais claro
+  
+  // Cores específicas para dark mode
+  text: '#ffffff',         // Texto branco
+  textSecondary: '#bdc3c7', // Texto secundário claro
+  background: '#1a1a1a',   // Fundo muito escuro
+  surface: '#2c3e50',      // Superfícies escuras
+  cardBackground: '#34495e', // Cards escuros
+  shadow: '#000000',       // Sombra preta
+  lightGray: '#566573',    // Cinza claro para dark mode
+  border: '#e0e0e0',
 };
 
 // Estilos globais para manter consistência na aplicação

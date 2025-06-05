@@ -7,231 +7,309 @@ import {
   TouchableOpacity,
   SafeAreaView
 } from 'react-native';
-import { COLORS, globalStyles } from '../styles/globalStyles';
+import { useTheme } from '../contexts/ThemeContext';
 import FundComparisonCalculator from '../components/FundComparisonCalculator';
-import SimplePieChart from '../components/SimplePieChart';
+import UltraSimplePieChart from '../components/UltraSimplePieChart';
+import InteractiveTips from '../components/InteractiveTips';
+import SectionWrapper from '../components/SectionWrapper';
 
 const Chapter6Screen = ({ navigation }) => {
+  const { colors } = useTheme();
+  
+  // 🎨 Estilos dinâmicos baseados no tema
+  const dynamicStyles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    headerContainer: {
+      backgroundColor: colors.primaryDark,
+      padding: 20,
+      alignItems: 'center',
+    },
+    headerTitle: {
+      color: colors.white,
+      fontSize: 24,
+      fontWeight: 'bold',
+      textTransform: 'uppercase',
+    },
+    headerSubtitle: {
+      color: colors.white,
+      fontSize: 18,
+      marginTop: 5,
+    },
+    contentContainer: {
+      paddingHorizontal: 20,
+      paddingVertical: 15,
+    },
+    sectionTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: colors.text,
+      marginVertical: 15,
+    },
+    paragraph: {
+      fontSize: 16,
+      lineHeight: 24,
+      color: colors.text,
+      marginBottom: 15,
+      textAlign: 'justify',
+    },
+    highlight: {
+      fontWeight: 'bold',
+      color: colors.primary,
+    },
+    calculatorContainer: {
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      marginVertical: 20,
+      padding: 15,
+      borderWidth: 1,
+      borderColor: colors.lightGray,
+    },
+    portfolioSection: {
+      marginTop: 40,
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      padding: 20,
+      borderWidth: 1,
+      borderColor: colors.lightGray,
+    },
+    chartRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginVertical: 20,
+    },
+    pieChartContainer: {
+      flex: 1,
+      alignItems: 'center',
+    },
+    pieLabelsContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      paddingLeft: 20,
+    },
+    legendItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginVertical: 5,
+    },
+    legendColor: {
+      width: 20,
+      height: 20,
+      borderRadius: 10,
+      marginRight: 10,
+    },
+    legendText: {
+      fontSize: 14,
+      color: colors.text,
+      flex: 1,
+    },
+    navigationContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: 30,
+      paddingHorizontal: 20,
+    },
+    navButton: {
+      backgroundColor: colors.primary,
+      paddingVertical: 12,
+      paddingHorizontal: 24,
+      borderRadius: 8,
+      flex: 1,
+      marginHorizontal: 5,
+    },
+    navButtonText: {
+      color: colors.white,
+      textAlign: 'center',
+      fontWeight: 'bold',
+      fontSize: 16,
+    },
+    tipBox: {
+      backgroundColor: colors.surface,
+      borderLeftWidth: 4,
+      borderLeftColor: colors.warning,
+      padding: 15,
+      marginVertical: 15,
+      borderRadius: 8,
+    },
+    tipText: {
+      color: colors.text,
+      fontSize: 16,
+      lineHeight: 22,
+    },
+  });
+
+  const portfolioData = [
+    { label: 'Fundo DI', percentage: 40, color: colors.primaryDark },
+    { label: 'ETF IVVB11', percentage: 30, color: colors.success },
+    { label: 'Multimercado', percentage: 20, color: colors.warning },
+    { label: 'FIIs', percentage: 10, color: colors.secondary },
+  ];
+
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={{paddingBottom: 50}} style={{flex: 1, width: '100%'}}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.headerTitle}>Capítulo 6</Text>
-          <Text style={styles.headerSubtitle}>Fundos de Investimento</Text>
+    <SafeAreaView style={dynamicStyles.container}>
+      <ScrollView 
+        contentContainerStyle={{paddingBottom: 50}}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={dynamicStyles.headerContainer}>
+          <Text style={dynamicStyles.headerTitle}>Capítulo 6 - Conclusão</Text>
+          <Text style={dynamicStyles.headerSubtitle}>Fundos de Investimento + 20 Dicas Práticas</Text>
         </View>
-        
-        <View style={styles.contentContainer}>
-          <Text style={styles.paragraph}>
-            Os <Text style={styles.highlight}>fundos de investimento</Text> são uma das formas mais 
+
+        <View style={dynamicStyles.contentContainer}>
+          <Text style={dynamicStyles.paragraph}>
+            Os <Text style={dynamicStyles.highlight}>fundos de investimento</Text> são uma das formas mais 
             acessíveis e diversificadas de investir, especialmente para quem está começando ou 
             não tem tempo para análises detalhadas do mercado.
           </Text>
-          
-          <View style={styles.infoBox}>
-            <Text style={styles.infoTitle}>🎯 O que são Fundos de Investimento?</Text>
-            <Text style={styles.infoText}>
-              Um fundo é como um <Text style={styles.highlight}>"condomínio de investidores"</Text> onde 
+
+          {/* O que são Fundos */}
+          <Text style={dynamicStyles.sectionTitle}>🎯 O que são Fundos de Investimento?</Text>
+          <View style={dynamicStyles.tipBox}>
+            <Text style={dynamicStyles.tipText}>
+              Um fundo é como um <Text style={dynamicStyles.highlight}>"condomínio de investidores"</Text> onde 
               várias pessoas juntam seu dinheiro em um patrimônio comum, administrado por um 
               gestor profissional que toma as decisões de investimento.
             </Text>
-            <Text style={styles.infoText}>
-              <Text style={styles.highlight}>Vantagens:</Text> Diversificação automática, gestão profissional, 
-              acesso a investimentos que exigiriam valores maiores individualmente.
-            </Text>
-          </View>
-          
-          <Text style={styles.sectionTitle}>🏦 Principais Tipos de Fundos</Text>
-          
-          <View style={styles.fundTypeCard}>
-            <Text style={styles.fundTypeTitle}>1. 💰 Fundos DI e Renda Fixa</Text>
-            <Text style={styles.fundTypeDescription}>
-              <Text style={styles.highlight}>Objetivo:</Text> Seguir a taxa DI ou investir em títulos de renda fixa{'\n'}
-              <Text style={styles.highlight}>Risco:</Text> Baixo{'\n'}
-              <Text style={styles.highlight}>Liquidez:</Text> Diária{'\n'}
-              <Text style={styles.highlight}>Ideal para:</Text> Reserva de emergência, objetivos de curto prazo
-            </Text>
-            <View style={styles.fundExample}>
-              <Text style={styles.exampleTitle}>📊 Exemplo de Composição:</Text>
-              <Text style={styles.exampleText}>• 80% CDI/Tesouro Selic</Text>
-              <Text style={styles.exampleText}>• 15% CDBs de bancos grandes</Text>
-              <Text style={styles.exampleText}>• 5% LCIs/LCAs</Text>
-            </View>
-          </View>
-          
-          <View style={styles.fundTypeCard}>
-            <Text style={styles.fundTypeTitle}>2. 🎭 Fundos Multimercado</Text>
-            <Text style={styles.fundTypeDescription}>
-              <Text style={styles.highlight}>Objetivo:</Text> Buscar retornos superiores através de estratégias diversificadas{'\n'}
-              <Text style={styles.highlight}>Risco:</Text> Médio a alto{'\n'}
-              <Text style={styles.highlight}>Liquidez:</Text> Diária (pode ter carência){'\n'}
-              <Text style={styles.highlight}>Ideal para:</Text> Diversificação da carteira, busca por rentabilidade
-            </Text>
-            <View style={styles.fundExample}>
-              <Text style={styles.exampleTitle}>🎯 Estratégias Comuns:</Text>
-              <Text style={styles.exampleText}>• Macro: apostas em cenários econômicos</Text>
-              <Text style={styles.exampleText}>• Long Short: compra e venda de ações</Text>
-              <Text style={styles.exampleText}>• Capital Protegido: proteção do capital</Text>
-            </View>
-          </View>
-          
-          <View style={styles.fundTypeCard}>
-            <Text style={styles.fundTypeTitle}>3. 📈 Fundos de Ações</Text>
-            <Text style={styles.fundTypeDescription}>
-              <Text style={styles.highlight}>Objetivo:</Text> Investir em ações de empresas brasileiras{'\n'}
-              <Text style={styles.highlight}>Risco:</Text> Alto{'\n'}
-              <Text style={styles.highlight}>Liquidez:</Text> Diária{'\n'}
-              <Text style={styles.highlight}>Ideal para:</Text> Crescimento de longo prazo, jovens investidores
-            </Text>
-            <View style={styles.fundExample}>
-              <Text style={styles.exampleTitle}>🏢 Tipos Principais:</Text>
-              <Text style={styles.exampleText}>• Índice: replicam Ibovespa, IBRX-100</Text>
-              <Text style={styles.exampleText}>• Livre: gestão ativa na seleção</Text>
-              <Text style={styles.exampleText}>• Setoriais: foco em setores específicos</Text>
-            </View>
-          </View>
-          
-          <View style={styles.fundTypeCard}>
-            <Text style={styles.fundTypeTitle}>4. 🏢 Fundos Imobiliários (FIIs)</Text>
-            <Text style={styles.fundTypeDescription}>
-              <Text style={styles.highlight}>Objetivo:</Text> Investir em imóveis comerciais e distribuir aluguéis{'\n'}
-              <Text style={styles.highlight}>Risco:</Text> Médio{'\n'}
-              <Text style={styles.highlight}>Liquidez:</Text> Diária (via bolsa){'\n'}
-              <Text style={styles.highlight}>Ideal para:</Text> Renda passiva mensal, diversificação
-            </Text>
-            <View style={styles.fundExample}>
-              <Text style={styles.exampleTitle}>🏗️ Tipos de FIIs:</Text>
-              <Text style={styles.exampleText}>• Tijolo: prédios comerciais, shoppings</Text>
-              <Text style={styles.exampleText}>• Papel: CRIs, LCIs do setor imobiliário</Text>
-              <Text style={styles.exampleText}>• Híbridos: combinação dos anteriores</Text>
-            </View>
-          </View>
-          
-          <View style={styles.fundTypeCard}>
-            <Text style={styles.fundTypeTitle}>5. 🌍 ETFs (Exchange Traded Funds)</Text>
-            <Text style={styles.fundTypeDescription}>
-              <Text style={styles.highlight}>Objetivo:</Text> Replicar índices de mercado com baixo custo{'\n'}
-              <Text style={styles.highlight}>Risco:</Text> Varia conforme o índice{'\n'}
-              <Text style={styles.highlight}>Liquidez:</Text> Diária (via bolsa){'\n'}
-              <Text style={styles.highlight}>Ideal para:</Text> Diversificação instantânea, baixo custo
-            </Text>
-            <View style={styles.fundExample}>
-              <Text style={styles.exampleTitle}>📊 ETFs Populares:</Text>
-              <Text style={styles.exampleText}>• BOVA11: Ibovespa</Text>
-              <Text style={styles.exampleText}>• IVVB11: S&P 500 (EUA)</Text>
-              <Text style={styles.exampleText}>• SMAL11: Small Caps Brasil</Text>
-            </View>
-          </View>
-          
-          <Text style={styles.sectionTitle}>💰 Custos dos Fundos</Text>
-          
-          <View style={styles.costsContainer}>
-            <View style={styles.costCard}>
-              <Text style={styles.costTitle}>📋 Taxa de Administração</Text>
-              <Text style={styles.costDescription}>
-                Cobrada anualmente sobre o patrimônio. Varia de 0,3% (ETFs) até 3% (multimercado).
-                <Text style={styles.highlight}> É descontada diariamente da cota.</Text>
+            <Text style={dynamicStyles.tipText}>
+              <Text style={dynamicStyles.highlight}>Vantagens:</Text> Diversificação automática, gestão profissional, 
+                acesso a investimentos que exigiriam valores maiores individualmente.
               </Text>
             </View>
+          </View>
+
+          {/* Tipos de Fundos */}
+          <View style={dynamicStyles.section}>
+            <Text style={dynamicStyles.sectionTitle}>🏦 Principais Tipos de Fundos</Text>
             
-            <View style={styles.costCard}>
-              <Text style={styles.costTitle}>🎯 Taxa de Performance</Text>
-              <Text style={styles.costDescription}>
-                Cobrada quando o fundo supera um benchmark. Normalmente 20% do que exceder o CDI.
-                <Text style={styles.highlight}> Só paga quando há ganho extra.</Text>
+            <View style={dynamicStyles.fundCard}>
+              <Text style={dynamicStyles.fundTitle}>💰 Fundos DI e Renda Fixa</Text>
+              <Text style={dynamicStyles.fundDesc}>
+                <Text style={styles.highlight}>Objetivo:</Text> Seguir a taxa DI ou investir em títulos de renda fixa{'\n'}
+                <Text style={styles.highlight}>Risco:</Text> Baixo • <Text style={styles.highlight}>Liquidez:</Text> Diária{'\n'}
+                <Text style={styles.highlight}>Ideal para:</Text> Reserva de emergência, objetivos de curto prazo
               </Text>
             </View>
-            
-            <View style={styles.costCard}>
-              <Text style={styles.costTitle}>🚪 Taxa de Entrada/Saída</Text>
-              <Text style={styles.costDescription}>
-                Alguns fundos cobram ao aplicar ou resgatar. 
-                <Text style={styles.highlight}> Evite fundos com essas taxas.</Text>
+
+            <View style={styles.fundCard}>
+              <Text style={styles.fundTitle}>🎭 Fundos Multimercado</Text>
+              <Text style={styles.fundDesc}>
+                <Text style={styles.highlight}>Objetivo:</Text> Buscar retornos superiores através de estratégias diversificadas{'\n'}
+                <Text style={styles.highlight}>Risco:</Text> Médio a alto • <Text style={styles.highlight}>Liquidez:</Text> Diária{'\n'}
+                <Text style={styles.highlight}>Ideal para:</Text> Diversificação da carteira, busca por rentabilidade
               </Text>
             </View>
-            
-            <View style={styles.costCard}>
-              <Text style={styles.costTitle}>⏱️ Come-Cotas</Text>
-              <Text style={styles.costDescription}>
-                Antecipação de IR em maio e novembro. Aplicável apenas para fundos de longo prazo.
-                <Text style={styles.highlight}> Não é custo adicional, é antecipação.</Text>
-              </Text>
-            </View>
+
+            <View style={styles.fundCard}>
+              <Text style={styles.fundTitle}>📈 Fundos de Ações</Text>
+              <Text style={styles.fundDesc}>
+                <Text style={styles.highlight}>Objetivo:</Text> Investir em ações de empresas brasileiras{'\n'}
+                <Text style={styles.highlight}>Risco:</Text> Alto • <Text style={styles.highlight}>Liquidez:</Text> Diária{'\n'}
+              <Text style={dynamicStyles.highlight}>Ideal para:</Text> Crescimento de longo prazo, jovens investidores
+            </Text>
+          </View>
+
+          <View style={dynamicStyles.tipBox}>
+            <Text style={[dynamicStyles.sectionTitle, {fontSize: 16}]}>🏢 Fundos Imobiliários (FIIs)</Text>
+            <Text style={dynamicStyles.tipText}>
+              <Text style={dynamicStyles.highlight}>Objetivo:</Text> Investir em imóveis comerciais e distribuir aluguéis{'\n'}
+              <Text style={dynamicStyles.highlight}>Risco:</Text> Médio • <Text style={dynamicStyles.highlight}>Liquidez:</Text> Diária{'\n'}
+              <Text style={dynamicStyles.highlight}>Ideal para:</Text> Renda passiva mensal, diversificação
+            </Text>
+          </View>
+
+          <View style={dynamicStyles.tipBox}>
+            <Text style={[dynamicStyles.sectionTitle, {fontSize: 16}]}>🌍 ETFs (Exchange Traded Funds)</Text>
+            <Text style={dynamicStyles.tipText}>
+              <Text style={dynamicStyles.highlight}>Objetivo:</Text> Replicar índices de mercado com baixo custo{'\n'}
+              <Text style={dynamicStyles.highlight}>Risco:</Text> Varia conforme o índice{'\n'}
+              <Text style={dynamicStyles.highlight}>Ideal para:</Text> Diversificação instantânea, baixo custo
+            </Text>
+          </View>
+
+          {/* Custos */}
+          <Text style={dynamicStyles.sectionTitle}>💰 Custos dos Fundos</Text>
+          
+          <View style={dynamicStyles.tipBox}>
+            <Text style={[dynamicStyles.sectionTitle, {fontSize: 16}]}>📋 Taxa de Administração</Text>
+            <Text style={dynamicStyles.tipText}>
+              Cobrada anualmente sobre o patrimônio. Varia de 0,3% (ETFs) até 3% (multimercado).
+            </Text>
           </View>
           
-          <Text style={styles.sectionTitle}>🧮 Compare Fundos</Text>
-          
-          <Text style={styles.paragraph}>
-            Use a calculadora abaixo para comparar diferentes fundos e entender o impacto 
-            das taxas na sua rentabilidade final:
-          </Text>
-          
-          <FundComparisonCalculator />
-          
-          <Text style={styles.sectionTitle}>📊 Carteira Modelo com Fundos</Text>
-          
-          <View style={styles.portfolioContainer}>
-            <Text style={styles.portfolioTitle}>Exemplo: Carteira Conservadora</Text>
-            <View style={styles.chartRow}>
-              <View style={styles.pieChartContainer}>
-                <SimplePieChart
-                  size={200}
-                  data={[
-                    {
-                      key: 1,
-                      value: 40,
-                      color: COLORS.primaryDark,
-                    },
-                    {
-                      key: 2,
-                      value: 30,
-                      color: '#4CAF50',
-                    },
-                    {
-                      key: 3,
-                      value: 20,
-                      color: '#FFC107',
-                    },
-                    {
-                      key: 4,
-                      value: 10,
-                      color: '#9C27B0',
-                    }
-                  ]}
-                />
+          <View style={styles.costCard}>
+            <Text style={styles.costTitle}>🎯 Taxa de Performance</Text>
+            <Text style={styles.costDesc}>
+              Cobrada quando o fundo supera um benchmark. Normalmente 20% do que exceder o CDI.
+            </Text>
+          </View>
+
+          {/* Calculator */}
+          <SectionWrapper type="calculator">
+            <View style={styles.section}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>🧮 Compare Fundos</Text>
+              <Text style={styles.paragraphText}>
+                Use a calculadora abaixo para comparar diferentes fundos:
+              </Text>
+              <FundComparisonCalculator />
+            </View>
+          </SectionWrapper>
+
+          {/* Portfolio Model */}
+          <SectionWrapper type="portfolio">
+            <View style={styles.section}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>📊 Carteira Modelo com Fundos</Text>
+            
+            <View style={styles.portfolioContainer}>
+              <Text style={styles.portfolioTitle}>Exemplo: Carteira Conservadora</Text>
+              
+              <View style={styles.chartRow}>
+                <View style={styles.pieChartContainer}>
+                  <UltraSimplePieChart
+                    size={200}
+                    data={[
+                      { key: 1, value: 40, svg: { fill: colors.primary } },
+                      { key: 2, value: 30, svg: { fill: '#4CAF50' } },
+                      { key: 3, value: 20, svg: { fill: '#FFC107' } },
+                      { key: 4, value: 10, svg: { fill: '#9C27B0' } },
+                    ]}
+                  />
+                </View>
+                
+                <View style={styles.pieLabelsContainer}>
+                  {portfolioData.map((item, index) => (
+                    <View key={index} style={styles.pieLabelRow}>
+                      <View style={[styles.pieLabelColor, { backgroundColor: item.color }]} />
+                      <Text style={styles.pieLabelText}>{item.label}: {item.percentage}%</Text>
+                    </View>
+                  ))}
+                </View>
               </View>
               
-              <View style={styles.pieLabelsContainer}>
-                <View style={styles.pieLabelRow}>
-                  <View style={[styles.pieLabelColor, { backgroundColor: COLORS.primaryDark }]} />
-                  <Text style={styles.pieLabelText}>Fundo DI: 40%</Text>
-                </View>
-                
-                <View style={styles.pieLabelRow}>
-                  <View style={[styles.pieLabelColor, { backgroundColor: '#4CAF50' }]} />
-                  <Text style={styles.pieLabelText}>ETF IVVB11: 30%</Text>
-                </View>
-                
-                <View style={styles.pieLabelRow}>
-                  <View style={[styles.pieLabelColor, { backgroundColor: '#FFC107' }]} />
-                  <Text style={styles.pieLabelText}>Multimercado: 20%</Text>
-                </View>
-                
-                <View style={styles.pieLabelRow}>
-                  <View style={[styles.pieLabelColor, { backgroundColor: '#9C27B0' }]} />
-                  <Text style={styles.pieLabelText}>FIIs: 10%</Text>
-                </View>
+              <View style={styles.portfolioList}>
+                {portfolioData.map((item, index) => (
+                  <View key={index} style={styles.portfolioItem}>
+                    <View style={[styles.portfolioColor, { backgroundColor: item.color }]} />
+                    <Text style={styles.portfolioLabel}>{item.label}: {item.percentage}%</Text>
+                  </View>
+                ))}
               </View>
             </View>
           </View>
-          
-          <Text style={styles.sectionTitle}>✅ Como Escolher um Bom Fundo</Text>
-          
-          <View style={styles.selectionGuide}>
-            <View style={styles.selectionStep}>
+          </SectionWrapper>
+
+          {/* Selection Guide */}
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>✅ Como Escolher um Bom Fundo</Text>
+            
+            <View style={styles.stepCard}>
               <Text style={styles.stepNumber}>1</Text>
               <View style={styles.stepContent}>
                 <Text style={styles.stepTitle}>Defina seu Objetivo</Text>
-                <Text style={styles.stepDescription}>
+                <Text style={styles.stepDesc}>
                   Reserva de emergência → Fundo DI{'\n'}
                   Crescimento → Fundo de Ações ou ETF{'\n'}
                   Renda → FIIs ou Multimercado
@@ -239,44 +317,46 @@ const Chapter6Screen = ({ navigation }) => {
               </View>
             </View>
             
-            <View style={styles.selectionStep}>
+            <View style={styles.stepCard}>
               <Text style={styles.stepNumber}>2</Text>
               <View style={styles.stepContent}>
                 <Text style={styles.stepTitle}>Analise os Custos</Text>
-                <Text style={styles.stepDescription}>
-                  Taxa de administração abaixo da média do tipo{'\n'}
+                <Text style={styles.stepDesc}>
+                  Taxa de administração abaixo da média{'\n'}
                   Evite taxas de entrada/saída{'\n'}
                   Compare custo vs. performance histórica
                 </Text>
               </View>
             </View>
             
-            <View style={styles.selectionStep}>
+            <View style={styles.stepCard}>
               <Text style={styles.stepNumber}>3</Text>
               <View style={styles.stepContent}>
                 <Text style={styles.stepTitle}>Verifique a Gestora</Text>
-                <Text style={styles.stepDescription}>
+                <Text style={styles.stepDesc}>
                   Histórico da gestora e gestor{'\n'}
                   Patrimônio líquido do fundo{'\n'}
                   Reputação no mercado
                 </Text>
               </View>
             </View>
+          </View>
+          {/* Tips */}
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>💡 20 Dicas Práticas para Investir com Sabedoria</Text>
             
-            <View style={styles.selectionStep}>
-              <Text style={styles.stepNumber}>4</Text>
-              <View style={styles.stepContent}>
-                <Text style={styles.stepTitle}>Avalie Performance</Text>
-                <Text style={styles.stepDescription}>
-                  Compare com benchmark e pares{'\n'}
-                  Analise consistência ao longo do tempo{'\n'}
-                  Considere volatilidade (risco)
-                </Text>
-              </View>
+            <Text style={styles.paragraphText}>
+              Para concluir este guia, reunimos <Text style={styles.highlight}>20 dicas práticas e essenciais</Text> que 
+              todo investidor iniciante deve conhecer:
+            </Text>
+            
+            <View style={styles.tipsContainer}>
+              <InteractiveTips />
             </View>
           </View>
-          
-          <View style={styles.warningBox}>
+
+          {/* Warning */}
+          <View style={styles.warningCard}>
             <Text style={styles.warningTitle}>⚠️ Cuidados Importantes</Text>
             <Text style={styles.warningText}>
               • <Text style={styles.highlight}>Rentabilidade passada não garante rentabilidade futura</Text>{'\n'}
@@ -286,20 +366,19 @@ const Chapter6Screen = ({ navigation }) => {
               • Cuidado com fundos "da moda" ou promessas irreais
             </Text>
           </View>
-          
-          <View style={styles.tipContainer}>
-            <Text style={styles.tipTitle}>💡 Sabedoria Financeira</Text>
-            <Text style={styles.tipText}>
-              <Text style={styles.highlight}>Fundos são como um táxi financeiro:</Text> você paga para alguém mais 
-              experiente te levar ao destino. O importante é escolher um motorista confiável, 
-              conhecer o destino (seu objetivo) e estar disposto a pagar um preço justo pela viagem.
-              
-              Para a maioria dos investidores iniciantes, um ETF que replica o índice pode ser 
-              o melhor "táxi" - simples, barato e eficiente.
+
+          {/* Final Wisdom */}
+          <View style={styles.wisdomContainer}>
+            <Text style={styles.wisdomTitle}>🎯 Conclusão</Text>
+            <Text style={styles.wisdomText}>
+              <Text style={styles.highlight}>Investir com sabedoria não é sobre ser o mais inteligente do mercado,</Text> 
+              mas sobre ser disciplinado, consistente e paciente. Comece hoje, mesmo que com pouco, 
+              e vá aprendendo pelo caminho. Seu eu do futuro agradecerá!
             </Text>
           </View>
-          
-          <View style={styles.navigationButtons}>
+
+          {/* Navigation */}
+          <View style={styles.navigation}>
             <TouchableOpacity 
               style={[styles.navButton, styles.prevButton]}
               onPress={() => navigation.navigate('Chapter5')}
@@ -311,7 +390,7 @@ const Chapter6Screen = ({ navigation }) => {
               style={[styles.navButton, styles.nextButton]}
               onPress={() => navigation.navigate('Chapter7')}
             >
-              <Text style={styles.nextButtonText}>Capítulo 7 →</Text>
+              <Text style={styles.nextButtonText}>🎓 Módulos Extras →</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -323,106 +402,94 @@ const Chapter6Screen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: colors.white,
   },
-  headerContainer: {
-    backgroundColor: COLORS.primaryDark,
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 30,
+  },
+  header: {
+    backgroundColor: colors.primaryDark,
     padding: 20,
     alignItems: 'center',
   },
   headerTitle: {
-    color: COLORS.white,
+    color: colors.buttonText,
     fontSize: 24,
     fontWeight: 'bold',
     textTransform: 'uppercase',
   },
   headerSubtitle: {
-    color: COLORS.white,
+    color: colors.buttonText,
     fontSize: 16,
     marginTop: 5,
     textAlign: 'center',
   },
-  contentContainer: {
-    padding: 15,
+  content: {
+    padding: 20,
   },
-  paragraph: {
+  introText: {
     fontSize: 16,
     lineHeight: 24,
-    color: COLORS.black,
-    marginBottom: 20,
+    color: colors.black,
+    marginBottom: 25,
   },
   highlight: {
     fontWeight: 'bold',
-    color: COLORS.primaryDark,
+    color: colors.primary,
+  },
+  section: {
+    marginBottom: 30,
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: COLORS.primaryDark,
+    color: colors.primary,
     marginBottom: 15,
-    marginTop: 10,
   },
-  infoBox: {
-    backgroundColor: COLORS.primaryLight,
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 20,
-  },
-  infoTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: COLORS.primaryDark,
+  infoCard: {
+    backgroundColor: colors.primaryLight,
+    borderRadius: 12,
+    padding: 20,
     marginBottom: 10,
   },
-  infoText: {
+  cardText: {
     fontSize: 16,
     lineHeight: 24,
     marginBottom: 10,
   },
-  fundTypeCard: {
-    backgroundColor: '#f9f9f9',
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 15,
-    borderLeftWidth: 4,
-    borderLeftColor: COLORS.primaryDark,
+  paragraphText: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: colors.black,
+    marginBottom: 20,
   },
-  fundTypeTitle: {
+  fundCard: {
+    backgroundColor: '#f9f9f9',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 12,
+    borderLeftWidth: 4,
+    borderLeftColor: colors.primary,
+  },
+  fundTitle: {
     fontSize: 17,
     fontWeight: 'bold',
-    color: COLORS.primaryDark,
-    marginBottom: 10,
+    color: colors.primary,
+    marginBottom: 8,
   },
-  fundTypeDescription: {
+  fundDesc: {
     fontSize: 15,
     lineHeight: 22,
-    marginBottom: 10,
-  },
-  fundExample: {
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-    borderRadius: 6,
-    padding: 10,
-    marginTop: 8,
-  },
-  exampleTitle: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: COLORS.primaryDark,
-    marginBottom: 5,
-  },
-  exampleText: {
-    fontSize: 13,
-    lineHeight: 18,
-    marginBottom: 2,
-  },
-  costsContainer: {
-    marginBottom: 20,
   },
   costCard: {
     backgroundColor: '#fff1f0',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 10,
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 12,
     borderLeftWidth: 3,
     borderLeftColor: '#e74c3c',
   },
@@ -432,22 +499,20 @@ const styles = StyleSheet.create({
     color: '#c0392b',
     marginBottom: 5,
   },
-  costDescription: {
+  costDesc: {
     fontSize: 14,
     lineHeight: 20,
   },
   portfolioContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginBottom: 20,
     backgroundColor: '#f9f9f9',
-    borderRadius: 8,
-    padding: 15,
+    borderRadius: 12,
+    padding: 20,
+    marginBottom: 15,
   },
   portfolioTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: COLORS.primaryDark,
+    color: colors.primary,
     marginBottom: 15,
     textAlign: 'center',
   },
@@ -456,6 +521,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexWrap: 'wrap',
+    marginBottom: 20,
     width: '100%',
   },
   pieChartContainer: {
@@ -491,26 +557,46 @@ const styles = StyleSheet.create({
   pieLabelText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#333',
+    color: colors.text,
   },
-  selectionGuide: {
-    marginBottom: 20,
+  portfolioList: {
+    marginBottom: 10,
   },
-  selectionStep: {
+  portfolioItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    backgroundColor: colors.cardBackground,
+    borderRadius: 8,
+  },
+  portfolioColor: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    marginRight: 12,
+  },
+  portfolioLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.text,
+  },
+  stepCard: {
     flexDirection: 'row',
     marginBottom: 15,
-    backgroundColor: 'white',
-    borderRadius: 8,
-    padding: 12,
-    shadowColor: '#000',
+    backgroundColor: colors.cardBackground,
+    borderRadius: 10,
+    padding: 15,
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
   },
   stepNumber: {
-    backgroundColor: COLORS.primaryDark,
-    color: 'white',
+    backgroundColor: colors.primary,
+    color: colors.buttonText,
     width: 30,
     height: 30,
     borderRadius: 15,
@@ -526,18 +612,21 @@ const styles = StyleSheet.create({
   stepTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: COLORS.primaryDark,
+    color: colors.primary,
     marginBottom: 4,
   },
-  stepDescription: {
+  stepDesc: {
     fontSize: 14,
     lineHeight: 20,
     color: '#555',
   },
-  warningBox: {
+  tipsContainer: {
+    marginBottom: 20,
+  },
+  warningCard: {
     backgroundColor: '#fff1f0',
-    borderRadius: 8,
-    padding: 15,
+    borderRadius: 10,
+    padding: 20,
     marginBottom: 20,
     borderLeftWidth: 4,
     borderLeftColor: '#e74c3c',
@@ -552,47 +641,50 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
   },
-  tipContainer: {
-    backgroundColor: COLORS.primaryLight,
-    borderRadius: 8,
-    padding: 15,
-    marginVertical: 20,
+  wisdomContainer: {
+    backgroundColor: colors.primaryLight,
+    borderRadius: 12,
+    padding: 20,
+    marginBottom: 30,
   },
-  tipTitle: {
+  wisdomTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: COLORS.primaryDark,
+    color: colors.primary,
     marginBottom: 10,
   },
-  tipText: {
+  wisdomText: {
     fontSize: 15,
     lineHeight: 22,
   },
-  navigationButtons: {
+  navigation: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 30,
+    marginTop: 20,
+    paddingTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: colors.lightGray,
   },
   navButton: {
     paddingVertical: 12,
     paddingHorizontal: 20,
-    borderRadius: 5,
+    borderRadius: 8,
     width: '48%',
     alignItems: 'center',
   },
   prevButton: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: colors.lightGray,
   },
   nextButton: {
-    backgroundColor: COLORS.primaryDark,
+    backgroundColor: colors.primary,
   },
   prevButtonText: {
     fontWeight: 'bold',
-    color: '#555',
+    color: colors.textSecondary,
   },
   nextButtonText: {
     fontWeight: 'bold',
-    color: COLORS.white,
+    color: colors.buttonText,
   },
 });
 

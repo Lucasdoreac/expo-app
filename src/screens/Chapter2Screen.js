@@ -9,27 +9,36 @@ import {
   Image
 } from 'react-native';
 import { COLORS, globalStyles } from '../styles/globalStyles';
+import { useLegacyColors } from '../contexts/ThemeContext';
+import RiskReturnLiquidityImproved from '../components/RiskReturnLiquidityImproved';
+import PremiumGate from '../components/PremiumGate';
 
 const Chapter2Screen = ({ navigation }) => {
+  const COLORS = useLegacyColors(); // 🎨 Cores dinâmicas para modo dark
+  
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView 
-        contentContainerStyle={{paddingBottom: 50}}
-        style={{flex: 1, width: '100%'}}
+    <SafeAreaView style={[styles.container, { backgroundColor: COLORS.background }]}>
+      <PremiumGate 
+        chapterName="Chapter2" 
+        source="chapter2_screen"
       >
+        <ScrollView 
+          contentContainerStyle={{paddingBottom: 50}}
+          style={{flex: 1, width: '100%'}}
+        >
         <View style={styles.headerContainer}>
           <Text style={styles.headerTitle}>Capítulo 2</Text>
           <Text style={styles.headerSubtitle}>Ativos Financeiros - Fundamentos</Text>
         </View>
         
         <View style={styles.contentContainer}>
-          <Text style={styles.paragraph}>
+          <Text style={[styles.paragraph, { color: COLORS.text }]}>
             Ativos financeiros são investimentos que você faz com a expectativa de 
             obter retorno no futuro. Diferente de bens físicos como imóveis ou carros, 
             eles são contratos ou títulos que representam um valor.
           </Text>
           
-          <Text style={styles.sectionTitle}>💹 Tipos de Ativos Financeiros</Text>
+          <Text style={[styles.sectionTitle, { color: COLORS.text }]}>💹 Tipos de Ativos Financeiros</Text>
           
           <View style={styles.assetTypeCard}>
             <Text style={styles.assetTypeTitle}>Renda Fixa</Text>
@@ -53,7 +62,7 @@ const Chapter2Screen = ({ navigation }) => {
             </Text>
           </View>
           
-          <Text style={styles.sectionTitle}>🏦 Comparativo com a Poupança</Text>
+          <Text style={[styles.sectionTitle, { color: COLORS.text }]}>🏦 Comparativo com a Poupança</Text>
           
           <View style={styles.table}>
             <View style={styles.tableHeader}>
@@ -87,9 +96,9 @@ const Chapter2Screen = ({ navigation }) => {
             </View>
           </View>
           
-          <Text style={styles.sectionTitle}>💰 Conceito de Renda Passiva</Text>
+          <Text style={[styles.sectionTitle, { color: COLORS.text }]}>💰 Conceito de Renda Passiva</Text>
           
-          <Text style={styles.paragraph}>
+          <Text style={[styles.paragraph, { color: COLORS.text }]}>
             <Text style={styles.highlight}>Renda passiva é aquela que você recebe sem precisar trabalhar ativamente por ela.</Text> 
             Seus investimentos geram dinheiro mesmo enquanto você dorme, trabalha ou curte a vida.
           </Text>
@@ -103,14 +112,14 @@ const Chapter2Screen = ({ navigation }) => {
             </Text>
           </View>
           
-          <Text style={styles.paragraph}>
+          <Text style={[styles.paragraph, { color: COLORS.text }]}>
             O objetivo ao construir um patrimônio é eventualmente ter ativos suficientes para 
             gerar uma renda passiva que cubra suas despesas, dando a você maior liberdade financeira.
           </Text>
           
-          <Text style={styles.sectionTitle}>📊 Escolhendo seus Primeiros Ativos</Text>
+          <Text style={[styles.sectionTitle, { color: COLORS.text }]}>📊 Escolhendo seus Primeiros Ativos</Text>
           
-          <Text style={styles.paragraph}>
+          <Text style={[styles.paragraph, { color: COLORS.text }]}>
             Como iniciante, é recomendável começar com ativos mais simples e seguros:
           </Text>
           
@@ -130,6 +139,36 @@ const Chapter2Screen = ({ navigation }) => {
             </Text>
           </View>
           
+          <Text style={[styles.sectionTitle, { color: COLORS.text }]}>⚖️ 2.7 - A Tríade Impossível dos Investimentos</Text>
+          
+          <Text style={[styles.paragraph, { color: COLORS.text }]}>
+            <Text style={styles.highlight}>Um dos conceitos mais importantes em investimentos:</Text> é impossível 
+            ter simultaneamente alta segurança, alta liquidez e alta rentabilidade em um único investimento. 
+            Esta é conhecida como a "Tríade Impossível".
+          </Text>
+          
+          <View style={styles.exampleBox}>
+            <Text style={styles.exampleTitle}>🔺 O Triângulo Impossível</Text>
+            <Text style={styles.exampleText}>
+              Você sempre precisa abrir mão de pelo menos uma dessas características:
+              • <Text style={styles.highlight}>Segurança + Liquidez</Text> = Menor rentabilidade (ex: poupança)
+              • <Text style={styles.highlight}>Segurança + Rentabilidade</Text> = Menor liquidez (ex: Tesouro IPCA+ longo prazo)
+              • <Text style={styles.highlight}>Liquidez + Rentabilidade</Text> = Maior risco (ex: ações)</Text>
+          </View>
+          
+          <Text style={[styles.paragraph, { color: COLORS.text }]}>
+            Use a ferramenta interativa abaixo para entender como diferentes combinações de risco, 
+            retorno e liquidez se traduzem em diferentes tipos de investimentos:
+          </Text>
+          
+          {/* Componente Triângulo Impossível */}
+          <RiskReturnLiquidityImproved />
+          
+          <Text style={[styles.paragraph, { color: COLORS.text }]}>
+            Compreender este conceito é fundamental para fazer escolhas conscientes e construir uma 
+            carteira diversificada que atenda seus diferentes objetivos e prazos.
+          </Text>
+          
           <View style={styles.navigationButtons}>
             <TouchableOpacity 
               style={[styles.navButton, styles.prevButton]}
@@ -147,6 +186,7 @@ const Chapter2Screen = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
+      </PremiumGate>
     </SafeAreaView>
   );
 };

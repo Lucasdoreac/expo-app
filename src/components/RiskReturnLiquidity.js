@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   Platform
 } from 'react-native';
-import Slider from '@react-native-community/slider';
+import CustomSlider from './CustomSlider';
 import { COLORS } from '../styles/globalStyles';
-import TriangleVisualization from './TriangleVisualization';
+import TriangleVisualizationResponsive from './TriangleVisualizationResponsive';
 
 const RiskReturnLiquidity = () => {
   // Estados para os valores de cada dimensão
@@ -181,8 +181,7 @@ const RiskReturnLiquidity = () => {
         <Text style={styles.sliderLabel}>
           Risco: <Text style={styles.sliderValue}>{risk}%</Text>
         </Text>
-        <Slider
-          key={`risk-${risk}`}
+        <CustomSlider
           minimumValue={0}
           maximumValue={100}
           value={risk}
@@ -190,8 +189,6 @@ const RiskReturnLiquidity = () => {
           step={5}
           minimumTrackTintColor={COLORS.primaryDark}
           maximumTrackTintColor="#d1d5db"
-          thumbStyle={styles.sliderThumb}
-          trackStyle={styles.sliderTrack}
           style={styles.slider}
         />
         <View style={styles.sliderLegend}>
@@ -204,8 +201,7 @@ const RiskReturnLiquidity = () => {
         <Text style={styles.sliderLabel}>
           Potencial de retorno: <Text style={styles.sliderValue}>{return_}%</Text>
         </Text>
-        <Slider
-          key={`return-${return_}`}
+        <CustomSlider
           minimumValue={0}
           maximumValue={100}
           value={return_}
@@ -213,8 +209,6 @@ const RiskReturnLiquidity = () => {
           step={5}
           minimumTrackTintColor={COLORS.primaryDark}
           maximumTrackTintColor="#d1d5db"
-          thumbStyle={styles.sliderThumb}
-          trackStyle={styles.sliderTrack}
           style={styles.slider}
         />
         <View style={styles.sliderLegend}>
@@ -227,8 +221,7 @@ const RiskReturnLiquidity = () => {
         <Text style={styles.sliderLabel}>
           Liquidez: <Text style={styles.sliderValue}>{liquidity}%</Text>
         </Text>
-        <Slider
-          key={`liquidity-${liquidity}`}
+        <CustomSlider
           minimumValue={0}
           maximumValue={100}
           value={liquidity}
@@ -236,8 +229,6 @@ const RiskReturnLiquidity = () => {
           step={5}
           minimumTrackTintColor={COLORS.primaryDark}
           maximumTrackTintColor="#d1d5db"
-          thumbStyle={styles.sliderThumb}
-          trackStyle={styles.sliderTrack}
           style={styles.slider}
         />
         <View style={styles.sliderLegend}>
@@ -260,7 +251,7 @@ const RiskReturnLiquidity = () => {
       )}
 
       {/* Visualização do Triângulo Impossível */}
-      <TriangleVisualization 
+      <TriangleVisualizationResponsive 
         risk={risk}
         return={return_}
         liquidity={liquidity}
@@ -359,24 +350,6 @@ const styles = StyleSheet.create({
   slider: {
     height: 50,
     marginVertical: 10,
-  },
-  sliderThumb: {
-    backgroundColor: COLORS.primaryDark,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    borderWidth: 3,
-    borderColor: '#ffffff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
-  },
-  sliderTrack: {
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#e9ecef',
   },
   sliderLegend: {
     flexDirection: 'row',

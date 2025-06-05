@@ -5,12 +5,15 @@ import {
   StyleSheet, 
   TextInput, 
   TouchableOpacity,
-  ScrollView,
   Alert 
 } from 'react-native';
 import { COLORS } from '../styles/globalStyles';
+import { useLegacyColors } from '../contexts/ThemeContext';
+import { useSafeColors } from '../contexts/SafeColorsHook';
 
 const FinancialGoalPlanner = () => {
+  const colors = useSafeColors(); // 🔧 CORREÇÃO: Hook seguro que nunca quebra
+  
   const [goal, setGoal] = useState({
     name: 'Reserva de Emergência',
     targetAmount: '30000',
@@ -120,7 +123,7 @@ const FinancialGoalPlanner = () => {
     <View style={styles.container}>
       <Text style={styles.title}>🎯 Planejador de Objetivos</Text>
       
-      <ScrollView style={styles.scrollContainer}>
+      <View style={styles.scrollContainer}>
         <Text style={styles.sectionTitle}>Objetivos Comuns</Text>
         <View style={styles.presetsContainer}>
           {presets.map((preset, index) => (
@@ -275,7 +278,7 @@ const FinancialGoalPlanner = () => {
             </View>
           </View>
         )}
-      </ScrollView>
+      </View>
     </View>
   );
 };
@@ -392,7 +395,7 @@ const styles = StyleSheet.create({
   },
   mainLabel: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.textSecondary,
     marginTop: 8,
     textAlign: 'center',
   },
@@ -438,7 +441,7 @@ const styles = StyleSheet.create({
   },
   scenarioMonths: {
     fontSize: 12,
-    color: '#666',
+    color: COLORS.textSecondary,
     marginHorizontal: 10,
   },
   scenarioAmount: {

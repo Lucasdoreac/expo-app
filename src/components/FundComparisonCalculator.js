@@ -4,12 +4,13 @@ import {
   Text, 
   StyleSheet, 
   TextInput, 
-  TouchableOpacity,
-  ScrollView 
+  TouchableOpacity
 } from 'react-native';
-import { COLORS } from '../styles/globalStyles';
+import { useTheme } from '../contexts/ThemeContext';
 
 const FundComparisonCalculator = () => {
+  const { colors } = useTheme(); // Hook para cores dinâmicas
+  
   const [fund1, setFund1] = useState({
     name: 'Fundo DI',
     investedAmount: '10000',
@@ -143,7 +144,7 @@ const FundComparisonCalculator = () => {
     <View style={styles.container}>
       <Text style={styles.title}>🧮 Comparador de Fundos</Text>
       
-      <ScrollView style={styles.scrollContainer}>
+      <View style={styles.contentWrapper}>
         <FundCard 
           title="Fundo 1" 
           fund={fund1} 
@@ -245,7 +246,7 @@ const FundComparisonCalculator = () => {
             </View>
           </View>
         )}
-      </ScrollView>
+      </View>
     </View>
   );
 };
@@ -256,6 +257,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 15,
     marginVertical: 15,
+    // Garantir que o componente se dimensione adequadamente
+    minHeight: 'auto',
+    flexShrink: 0,
   },
   title: {
     fontSize: 18,
@@ -264,8 +268,12 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
   },
-  scrollContainer: {
-    maxHeight: 600,
+  contentWrapper: {
+    // Substituir scrollContainer por wrapper responsivo
+    // Remover maxHeight fixo que causava overflow
+    flexDirection: 'column',
+    width: '100%',
+    paddingBottom: 20, // Espaçamento interno para garantir separação
   },
   fundCard: {
     backgroundColor: 'white',
@@ -366,7 +374,7 @@ const styles = StyleSheet.create({
   },
   resultLabel: {
     fontSize: 12,
-    color: '#666',
+    color: COLORS.textSecondary,
     marginBottom: 8,
   },
   feeText: {

@@ -4,51 +4,147 @@ import {
   Text, 
   StyleSheet, 
   TextInput, 
-  TouchableOpacity,
-  ScrollView 
+  TouchableOpacity 
 } from 'react-native';
 import { COLORS } from '../styles/globalStyles';
+import { useLegacyColors } from '../contexts/ThemeContext';
 
 const TaxCalculator = () => {
+  
   const [investment, setInvestment] = useState({
     initialAmount: '10000',
     finalAmount: '12000',
     days: '365',
-    investmentType: 'rendaFixa' // rendaFixa, fundos, acoes
+    investmentType: 'rendaFixa', // rendaFixa, fundos, acoes, acoesSwingTrade, acoesDayTrade
+    monthlyTradeVolume: '15000' // Para controle do limite de R$20.000/mês
   });
   
   const [results, setResults] = useState(null);
+  const [errors, setErrors] = useState([]);
 
-  // Tabela regressiva de IR para renda fixa
-  const getIRRate = (days, type) => {
-    if (type === 'acoes') return 0; // Ações são isentas para pessoa física (até determinado valor)
-    
-    if (days <= 180) return 0.225; // 22,5%
-    if (days <= 360) return 0.20;  // 20%
-    if (days <= 720) return 0.175; // 17,5%
-    return 0.15; // 15%
-  };
-
-  // Tabela de IOF
-  const getIOFRate = (days) => {
-    if (days >= 30) return 0;
-    
-    const iofTable = [
-      96, 93, 90, 86, 83, 80, 76, 73, 70, 66, // 1-10 dias
-      63, 60, 56, 53, 50, 46, 43, 40, 36, 33, // 11-20 dias
-      30, 26, 23, 20, 16, 13, 10, 6, 3, 0     // 21-30 dias
-    ];
-    
-    if (days <= 30) {
-      return (iofTable[days - 1] || 0) / 100;
-    }
-    return 0;
-  };
-
-  const calculateTaxes = () => {
+  // Validação de entrada aprimorada
+  const validateInputs = () => {
+    const newErrors = [];
     const initial = parseFloat(investment.initialAmount);
     const final = parseFloat(investment.finalAmount);
     const days = parseInt(investment.days);
+    
+    if (!investment.initialAmount || initial <= 0) {
+      newErrors.push('Valor inicial deve ser maior que zero');
+    }
+    
+    if (!investment.finalAmount || final <= 0) {
+      newErrors.push('Valor final deve ser maior que zero');
+    }
+    
+    if (!investment.days || days <= 0) {
+      newErrors.push('Período deve ser maior que zero');
+    }
+    
+    if (initial && final && final < initial) {
+      newErrors.push('Valor final deve ser maior que inicial');
+    }
+    
+    setErrors(newErrors);
+    return newErrors.length === 0;
+  };
+
+  // Cálculo de rentabilidade anualizada
+  const calculateAnnualizedReturn = (initial, final, days) => {
+    const totalReturn = (final / initial) - 1;
+    return Math.pow(1 + totalReturn, 365 / days) - 1;
+  };
+
+  // Formatação de percentual aprimorada
+  const formatPercentage = (value) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'percent',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(value);
+  };
+
+  // Dicas de otimização fiscal automáticas
+  const getTaxOptimizationTips = (days, type, iofAmount, irRate) => {
+    const tips = [];
+    
+    if (days < 30) {
+      tips.push({
+        type: 'warning',
+        title: '⚠️ IOF Alto!',
+        message: `Aguardar mais ${30 - days} dias eliminaria o IOF de ${formatCurrency(iofAmount)}`
+      });
+    }
+    
+    if (days > 180 && days < 361 && (type === 'rendaFixa' || type === 'fundos')) {
+      tips.push({
+        type: 'info',
+        title: '📉 IR pode melhorar',
+        message: `Aguardando mais ${361 - days} dias, IR cairia de 20% para 17,5%`
+      });
+    }
+    
+    if (days > 360 && days < 721 && (type === 'rendaFixa' || type === 'fundos')) {
+      tips.push({
+        type: 'success',
+        title: '🎯 Melhor tributação em vista',
+        message: `Em mais ${721 - days} dias, IR seria apenas 15% (menor alíquota)`
+      });
+    }
+    
+    return tips;
+  };
+
+  // Lógica corrigida de IR baseada no tipo de investimento
+  const getIRRate = (days, type, monthlyVolume = 0) => {
+    switch (type) {
+      case 'acoes':
+      case 'acoesSwingTrade':
+        // Ações pessoa física - isento até R$20.000/mês de vendas
+        if (monthlyVolume <= 20000) return 0;
+        return 0.15; // 15% sobre o ganho acima do limite
+        
+      case 'acoesDayTrade':
+        return 0.20; // 20% sempre para day trade
+        
+      case 'fundos':
+        // Fundos seguem tabela regressiva igual renda fixa
+        if (days <= 180) return 0.225; // 22,5%
+        if (days <= 360) return 0.20;  // 20%
+        if (days <= 720) return 0.175; // 17,5%
+        return 0.15; // 15%
+        
+      case 'rendaFixa':
+      default:
+        // Tabela regressiva padrão para renda fixa
+        if (days <= 180) return 0.225; // 22,5%
+        if (days <= 360) return 0.20;  // 20%
+        if (days <= 720) return 0.175; // 17,5%
+        return 0.15; // 15%
+    }
+  };
+
+  // Tabela IOF oficial (Circular STN 01/2022) - mais legível
+  const getIOFRate = (days) => {
+    if (days >= 30) return 0;
+    
+    const iofTable = {
+      1: 96, 2: 93, 3: 90, 4: 86, 5: 83, 6: 80, 7: 76, 8: 73, 9: 70, 10: 66,
+      11: 63, 12: 60, 13: 56, 14: 53, 15: 50, 16: 46, 17: 43, 18: 40, 19: 36, 20: 33,
+      21: 30, 22: 26, 23: 23, 24: 20, 25: 16, 26: 13, 27: 10, 28: 6, 29: 3, 30: 0
+    };
+    
+    return (iofTable[days] || 0) / 100;
+  };
+
+  const calculateTaxes = () => {
+    // Validar entrada antes de calcular
+    if (!validateInputs()) return;
+
+    const initial = parseFloat(investment.initialAmount);
+    const final = parseFloat(investment.finalAmount);
+    const days = parseInt(investment.days);
+    const monthlyVolume = parseFloat(investment.monthlyTradeVolume) || 0;
     const profit = final - initial;
     
     if (profit <= 0) {
@@ -60,13 +156,26 @@ const TaxCalculator = () => {
         iofAmount: 0,
         totalTaxes: 0,
         netAmount: final,
-        netProfit: profit
+        netProfit: profit,
+        isExempt: false,
+        exemptReason: '',
+        annualizedReturn: 0,
+        effectiveReturn: 0,
+        tips: []
       });
       return;
     }
     
-    const irRate = getIRRate(days, investment.investmentType);
+    const irRate = getIRRate(days, investment.investmentType, monthlyVolume);
     const iofRate = getIOFRate(days);
+    
+    // Verificar se está isento
+    const isExempt = irRate === 0;
+    let exemptReason = '';
+    
+    if (isExempt && (investment.investmentType === 'acoes' || investment.investmentType === 'acoesSwingTrade')) {
+      exemptReason = 'Ações pessoa física - vendas até R$20.000/mês são isentas de IR';
+    }
     
     const irAmount = profit * irRate;
     const iofAmount = profit * iofRate;
@@ -74,6 +183,13 @@ const TaxCalculator = () => {
     
     const netAmount = final - totalTaxes;
     const netProfit = profit - totalTaxes;
+    
+    // Calcular rentabilidades
+    const annualizedReturn = calculateAnnualizedReturn(initial, final, days);
+    const effectiveReturn = netProfit / initial;
+    
+    // Gerar dicas de otimização
+    const tips = getTaxOptimizationTips(days, investment.investmentType, iofAmount, irRate);
     
     setResults({
       profit,
@@ -84,7 +200,13 @@ const TaxCalculator = () => {
       totalTaxes,
       netAmount,
       netProfit,
-      days
+      days,
+      isExempt,
+      exemptReason,
+      monthlyVolume,
+      annualizedReturn,
+      effectiveReturn,
+      tips
     });
   };
 
@@ -114,9 +236,19 @@ const TaxCalculator = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>🧾 Calculadora de Impostos</Text>
+      <Text style={styles.title}>🧾 Calculadora de Impostos Aprimorada</Text>
       
-      <ScrollView style={styles.scrollContainer}>
+      {/* Exibir erros de validação */}
+      {errors.length > 0 && (
+        <View style={styles.errorContainer}>
+          {errors.map((error, index) => (
+            <Text key={index} style={styles.errorText}>⚠️ {error}</Text>
+          ))}
+        </View>
+      )}
+      
+      {/* REMOVIDO ScrollView - agora usa View normal para evitar nested scroll */}
+      <View style={styles.contentContainer}>
         <View style={styles.inputSection}>
           <Text style={styles.sectionTitle}>Tipo de Investimento</Text>
           <View style={styles.typeContainer}>
@@ -132,11 +264,25 @@ const TaxCalculator = () => {
               isSelected={investment.investmentType === 'fundos'}
               onPress={() => setInvestment({...investment, investmentType: 'fundos'})}
             />
+          </View>
+          <View style={[styles.typeContainer, {marginTop: 8}]}>
             <InvestmentTypeButton
               type="acoes"
-              label="Ações"
+              label="Ações PF"
               isSelected={investment.investmentType === 'acoes'}
               onPress={() => setInvestment({...investment, investmentType: 'acoes'})}
+            />
+            <InvestmentTypeButton
+              type="acoesSwingTrade"
+              label="Swing Trade"
+              isSelected={investment.investmentType === 'acoesSwingTrade'}
+              onPress={() => setInvestment({...investment, investmentType: 'acoesSwingTrade'})}
+            />
+            <InvestmentTypeButton
+              type="acoesDayTrade"
+              label="Day Trade"
+              isSelected={investment.investmentType === 'acoesDayTrade'}
+              onPress={() => setInvestment({...investment, investmentType: 'acoesDayTrade'})}
             />
           </View>
         </View>
@@ -177,6 +323,22 @@ const TaxCalculator = () => {
               placeholderTextColor="#999"
             />
           </View>
+          
+          {/* Campo de volume mensal apenas para ações */}
+          {(investment.investmentType === 'acoes' || investment.investmentType === 'acoesSwingTrade') && (
+            <View style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>Volume Mensal de Vendas (R$)</Text>
+              <Text style={styles.inputHelper}>Para ações pessoa física (limite R$20.000/mês)</Text>
+              <TextInput
+                style={styles.input}
+                value={investment.monthlyTradeVolume}
+                onChangeText={(text) => setInvestment({...investment, monthlyTradeVolume: text})}
+                keyboardType="numeric"
+                placeholder="15000"
+                placeholderTextColor="#999"
+              />
+            </View>
+          )}
         </View>
         
         <TouchableOpacity style={styles.calculateButton} onPress={calculateTaxes}>
@@ -192,6 +354,11 @@ const TaxCalculator = () => {
                 {formatCurrency(results.profit)}
               </Text>
               <Text style={styles.profitLabel}>Lucro Bruto</Text>
+              {/* Rentabilidade anualizada */}
+              <Text style={styles.returnInfo}>
+                Rentabilidade: {formatPercentage(results.effectiveReturn)} • 
+                Anualizada: {formatPercentage(results.annualizedReturn)}
+              </Text>
             </View>
             
             <View style={styles.taxBreakdown}>
@@ -223,6 +390,14 @@ const TaxCalculator = () => {
               </View>
             </View>
             
+            {/* Informações sobre isenção quando aplicável */}
+            {results.isExempt && (
+              <View style={styles.exemptBox}>
+                <Text style={styles.exemptTitle}>✅ Investimento Isento de IR</Text>
+                <Text style={styles.exemptText}>{results.exemptReason}</Text>
+              </View>
+            )}
+            
             <View style={styles.infoBox}>
               <Text style={styles.infoTitle}>📅 Informações sobre o Prazo</Text>
               {results.days <= 30 && (
@@ -245,10 +420,30 @@ const TaxCalculator = () => {
                   🎯 <Text style={styles.highlight}>Menor alíquota (15%)</Text> para investimentos acima de 2 anos!
                 </Text>
               )}
+              {investment.investmentType === 'acoesDayTrade' && (
+                <Text style={styles.infoText}>
+                  ⚡ <Text style={styles.highlight}>Day Trade (20% IR)</Text> - Tributação fixa independente do prazo!
+                </Text>
+              )}
+              {(investment.investmentType === 'acoes' || investment.investmentType === 'acoesSwingTrade') && results.monthlyVolume <= 20000 && (
+                <Text style={styles.infoText}>
+                  💰 <Text style={styles.highlight}>Ações PF Isentas</Text> - Vendas até R$20.000/mês são isentas de IR!
+                </Text>
+              )}
+              {(investment.investmentType === 'acoes' || investment.investmentType === 'acoesSwingTrade') && results.monthlyVolume > 20000 && (
+                <Text style={styles.infoText}>
+                  📊 <Text style={styles.highlight}>IR de 15%</Text> sobre ganhos acima do limite mensal de R$20.000.
+                </Text>
+              )}
+              {investment.investmentType === 'fundos' && (
+                <Text style={styles.infoText}>
+                  📈 <Text style={styles.highlight}>Fundos</Text> seguem tabela regressiva igual renda fixa.
+                </Text>
+              )}
             </View>
           </View>
         )}
-      </ScrollView>
+      </View>
     </View>
   );
 };
@@ -267,8 +462,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
   },
-  scrollContainer: {
-    maxHeight: 600,
+  contentContainer: {
+    // Removido maxHeight - agora usa altura natural
   },
   inputSection: {
     marginBottom: 15,
@@ -289,7 +484,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 5,
-    padding: 10,
+    padding: 8,
     alignItems: 'center',
     marginHorizontal: 2,
   },
@@ -298,9 +493,10 @@ const styles = StyleSheet.create({
     borderColor: COLORS.primaryDark,
   },
   typeButtonText: {
-    fontSize: 12,
-    color: '#666',
+    fontSize: 11,
+    color: COLORS.textSecondary,
     fontWeight: '500',
+    textAlign: 'center',
   },
   typeButtonTextSelected: {
     color: 'white',
@@ -320,6 +516,12 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 5,
     fontWeight: '500',
+  },
+  inputHelper: {
+    fontSize: 12,
+    color: COLORS.textSecondary,
+    marginBottom: 5,
+    fontStyle: 'italic',
   },
   input: {
     borderWidth: 1,
@@ -367,7 +569,7 @@ const styles = StyleSheet.create({
   },
   profitLabel: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.textSecondary,
     marginTop: 5,
   },
   taxBreakdown: {
@@ -429,7 +631,7 @@ const styles = StyleSheet.create({
   },
   finalLabel: {
     fontSize: 12,
-    color: '#666',
+    color: COLORS.textSecondary,
     marginTop: 5,
   },
   infoBox: {
@@ -450,6 +652,25 @@ const styles = StyleSheet.create({
   highlight: {
     fontWeight: 'bold',
     color: COLORS.primaryDark,
+  },
+  exemptBox: {
+    backgroundColor: '#E8F5E8',
+    borderRadius: 8,
+    padding: 15,
+    marginBottom: 15,
+    borderLeftWidth: 4,
+    borderLeftColor: '#27ae60',
+  },
+  exemptTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#27ae60',
+    marginBottom: 8,
+  },
+  exemptText: {
+    fontSize: 14,
+    color: '#2d5a3d',
+    lineHeight: 18,
   },
 });
 

@@ -1,25 +1,27 @@
 {
   "expo": {
-    "name": "luaraujo-livro-app",
+    "name": "Investindo com Sabedoria",
     "slug": "luaraujo-livro-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.luaraujo.investindocomsabedoria"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.luaraujo.investindocomsabedoria"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -27,6 +29,9 @@
     },
     "assetBundlePatterns": [
       "**/*"
+    ],
+    "plugins": [
+      "expo-build-properties"
     ]
   }
 }

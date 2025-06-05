@@ -9,12 +9,13 @@ import {
   Image
 } from 'react-native';
 import { COLORS, globalStyles } from '../styles/globalStyles';
-import ProductComparison from '../components/ProductComparison';
-import InvestmentGrowthChart from '../components/InvestmentGrowthChart';
+import { useLegacyColors } from '../contexts/ThemeContext';
+import ProductComparisonRendaFixa from '../components/ProductComparisonRendaFixa';
+import InvestmentGrowthChartResponsive from '../components/InvestmentGrowthChartResponsive';
 
 const Chapter4Screen = ({ navigation }) => {
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: COLORS.background }]}>
       <ScrollView contentContainerStyle={{paddingBottom: 50}} style={{flex: 1, width: '100%'}}>
         <View style={styles.headerContainer}>
           <Text style={styles.headerTitle}>Capítulo 4</Text>
@@ -22,12 +23,12 @@ const Chapter4Screen = ({ navigation }) => {
         </View>
         
         <View style={styles.contentContainer}>
-          <Text style={styles.paragraph}>
+          <Text style={[styles.paragraph, { color: COLORS.text }]}>
             Para a maioria dos investidores iniciantes, a <Text style={styles.highlight}>renda fixa é o ponto de partida ideal</Text>. 
             São investimentos com menor volatilidade, maior previsibilidade e adequados para reserva de emergência e objetivos de curto e médio prazo.
           </Text>
           
-          <View style={styles.infoBox}>
+          <View style={[styles.infoBox, { backgroundColor: COLORS.surface }]}>
             <Text style={styles.infoTitle}>💰 O que é Renda Fixa?</Text>
             <Text style={styles.infoText}>
               Renda fixa são investimentos nos quais você empresta dinheiro para alguém (governo, banco ou empresa) 
@@ -40,8 +41,8 @@ const Chapter4Screen = ({ navigation }) => {
             </View>
           </View>
           
-          <Text style={styles.sectionTitle}>🛡️ Segurança na Renda Fixa</Text>
-          <Text style={styles.paragraph}>
+          <Text style={[styles.sectionTitle, { color: COLORS.text }]}>🛡️ Segurança na Renda Fixa</Text>
+          <Text style={[styles.paragraph, { color: COLORS.text }]}>
             Ao contrário do que muitos pensam, <Text style={styles.highlight}>investimentos em renda fixa também possuem riscos</Text>, 
             embora geralmente menores que renda variável. Os principais riscos são:
           </Text>
@@ -73,28 +74,28 @@ const Chapter4Screen = ({ navigation }) => {
             </View>
           </View>
           
-          <Text style={styles.paragraph}>
+          <Text style={[styles.paragraph, { color: COLORS.text }]}>
             Para mitigar esses riscos, existem <Text style={styles.highlight}>mecanismos de proteção</Text> como o Fundo Garantidor de Créditos (FGC), 
             que cobre até R$ 250 mil por CPF/instituição em caso de quebra do banco, ou a solidez do governo federal para títulos do Tesouro Direto.
           </Text>
           
-          <Text style={styles.sectionTitle}>📋 Produtos de Renda Fixa para Iniciantes</Text>
-          <Text style={styles.paragraph}>
+          <Text style={[styles.sectionTitle, { color: COLORS.text }]}>📋 Produtos de Renda Fixa para Iniciantes</Text>
+          <Text style={[styles.paragraph, { color: COLORS.text }]}>
             Existem diversos produtos de renda fixa, cada um com suas características específicas.
             Abaixo você encontra um comparativo dos mais recomendados para investidores iniciantes.
           </Text>
           
-          <ProductComparison />
+          <ProductComparisonRendaFixa />
           
-          <Text style={styles.sectionTitle}>📈 A Magia da Renda Fixa a Longo Prazo</Text>
-          <Text style={styles.paragraph}>
+          <Text style={[styles.sectionTitle, { color: COLORS.text }]}>📈 A Magia da Renda Fixa a Longo Prazo</Text>
+          <Text style={[styles.paragraph, { color: COLORS.text }]}>
             Mesmo investimentos conservadores podem gerar resultados expressivos a longo prazo, graças ao
             poder dos juros compostos. Veja como pequenos aportes mensais podem crescer:
           </Text>
           
-          <InvestmentGrowthChart />
+          <InvestmentGrowthChartResponsive />
           
-          <Text style={styles.sectionTitle}>🧠 Estratégias de Renda Fixa para Objetivos Diferentes</Text>
+          <Text style={[styles.sectionTitle, { color: COLORS.text }]}>🧠 Estratégias de Renda Fixa para Objetivos Diferentes</Text>
           
           <View style={styles.strategyCard}>
             <Text style={styles.strategyTitle}>Reserva de Emergência</Text>

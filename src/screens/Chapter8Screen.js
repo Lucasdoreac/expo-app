@@ -7,265 +7,372 @@ import {
   TouchableOpacity,
   SafeAreaView
 } from 'react-native';
-import { COLORS, globalStyles } from '../styles/globalStyles';
+import { useTheme } from '../contexts/ThemeContext';
+import LadderInvestmentSimulator from '../components/LadderInvestmentSimulator';
+import FinancialGoalPlanner from '../components/FinancialGoalPlanner';
 
 const Chapter8Screen = ({ navigation }) => {
+  const { colors } = useTheme();
+  
+  // 🎨 Estilos dinâmicos baseados no tema
+  const dynamicStyles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    headerContainer: {
+      backgroundColor: colors.primaryDark,
+      paddingVertical: 20,
+      paddingHorizontal: 20,
+      alignItems: 'center',
+    },
+    headerTitle: {
+      color: colors.buttonText,
+      fontSize: 24,
+      fontWeight: 'bold',
+      textTransform: 'uppercase',
+    },
+    headerSubtitle: {
+      color: colors.buttonText,
+      fontSize: 16,
+      marginTop: 5,
+      textAlign: 'center',
+    },
+    content: {
+      flex: 1,
+      padding: 20,
+    },
+    scrollContent: {
+      paddingBottom: 100,
+    },
+    introText: {
+      fontSize: 16,
+      lineHeight: 24,
+      color: colors.text,
+      marginBottom: 25,
+    },
+    highlight: {
+      fontWeight: 'bold',
+      color: colors.primary,
+    },
+    section: {
+      marginBottom: 30,
+    },
+    sectionTitle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: colors.primary,
+      marginBottom: 15,
+      textAlign: 'center',
+    },
+    tipBox: {
+      backgroundColor: colors.lightBlue,
+      borderRadius: 10,
+      padding: 15,
+      marginVertical: 12,
+      borderLeftWidth: 4,
+      borderLeftColor: colors.primary,
+    },
+    tipText: {
+      fontSize: 15,
+      lineHeight: 22,
+      color: colors.text,
+      fontStyle: 'italic',
+    },
+    navigation: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: 20,
+      paddingTop: 20,
+      borderTopWidth: 1,
+      borderTopColor: colors.lightGray,
+    },
+    navButton: {
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      borderRadius: 8,
+      width: '48%',
+      alignItems: 'center',
+    },
+    prevButton: {
+      backgroundColor: colors.lightGray,
+    },
+    nextButton: {
+      backgroundColor: colors.primary,
+    },
+    prevButtonText: {
+      fontWeight: 'bold',
+      color: colors.textSecondary,
+    },
+    nextButtonText: {
+      fontWeight: 'bold',
+      color: colors.buttonText,
+    },
+  });
+  
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[dynamicStyles.container, { backgroundColor: COLORS.background }]}>
       <ScrollView contentContainerStyle={{paddingBottom: 50}} style={{flex: 1, width: '100%'}}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.headerTitle}>Capítulo 8</Text>
-          <Text style={styles.headerSubtitle}>Conclusão: Colocando Tudo em Prática</Text>
+        <View style={dynamicStyles.headerContainer}>
+          <Text style={dynamicStyles.headerTitle}>Capítulo 8</Text>
+          <Text style={dynamicStyles.headerSubtitle}>Estratégias Práticas</Text>
         </View>
         
-        <View style={styles.contentContainer}>
-          <Text style={styles.sectionTitle}>🌟 Os Pilares da Jornada do Investidor</Text>
-          <Text style={styles.paragraph}>
-            Sua jornada no mundo dos investimentos é sustentada por princípios fundamentais. Compreendê-los e aplicá-los fará toda a diferença:
+        <View style={dynamicStyles.contentContainer}>
+          <Text style={[dynamicStyles.paragraph, { color: COLORS.text }]}>
+            Agora que você conhece os fundamentos dos investimentos, é hora de aplicar 
+            <Text style={dynamicStyles.highlight}> estratégias práticas</Text> que realmente funcionam 
+            no dia a dia e podem acelerar a construção do seu patrimônio.
           </Text>
           
-          <View style={styles.pillarCard}>
-            <Text style={styles.pillarNumber}>1.</Text>
-            <Text style={styles.pillarText}><Text style={styles.highlight}>Consistência supera valor:</Text> Pequenos aportes regulares ao longo do tempo têm um poder transformador maior do que grandes aportes esporádicos.</Text>
-          </View>
-          
-          <View style={styles.pillarCard}>
-            <Text style={styles.pillarNumber}>2.</Text>
-            <Text style={styles.pillarText}><Text style={styles.highlight}>Equilíbrio entre emoção e razão:</Text> Decisões baseadas em análise e estratégia, não em euforia ou pânico, levam a melhores resultados.</Text>
-          </View>
-          
-          <View style={styles.pillarCard}>
-            <Text style={styles.pillarNumber}>3.</Text>
-            <Text style={styles.pillarText}><Text style={styles.highlight}>Diversificação inteligente:</Text> Não coloque todos os ovos na mesma cesta. Distribua seus investimentos para mitigar riscos.</Text>
-          </View>
-          
-          <View style={styles.pillarCard}>
-            <Text style={styles.pillarNumber}>4.</Text>
-            <Text style={styles.pillarText}><Text style={styles.highlight}>Planejamento tributário:</Text> Entender os impostos e buscar otimizações legais pode aumentar significativamente seus retornos líquidos.</Text>
-          </View>
-          
-          <View style={styles.pillarCard}>
-            <Text style={styles.pillarNumber}>5.</Text>
-            <Text style={styles.pillarText}><Text style={styles.highlight}>Visão de longo prazo:</Text> Investimento é uma maratona, não uma corrida de 100 metros. Paciência e foco no futuro são cruciais.</Text>
-          </View>
-
-          <Text style={styles.mainSectionTitle}>💡 20 Dicas Práticas para Investir com Sabedoria</Text>
-
-          <Text style={styles.subSectionTitle}>🚀 Começando</Text>
-          <View style={styles.tipCard}>
-            <Text style={styles.tipText}>1. <Text style={styles.highlight}>Defina metas claras:</Text> Saiba por que está investindo (ex: aposentadoria, viagem, entrada em imóvel).</Text>
-            <Text style={styles.tipText}>2. <Text style={styles.highlight}>Crie uma reserva de emergência:</Text> Antes de investir, tenha de 3 a 6 meses de custos cobertos.</Text>
-            <Text style={styles.tipText}>3. <Text style={styles.highlight}>Pague dívidas caras primeiro:</Text> Juros de dívidas (cartão, cheque especial) costumam ser maiores que rendimentos.</Text>
-            <Text style={styles.tipText}>4. <Text style={styles.highlight}>Conheça seu perfil de investidor:</Text> Conservador, moderado ou arrojado? Seja honesto consigo mesmo.</Text>
-            <Text style={styles.tipText}>5. <Text style={styles.highlight}>Comece com pouco, mas comece:</Text> O importante é dar o primeiro passo, mesmo com R$50 ou R$100.</Text>
-          </View>
-
-          <Text style={styles.subSectionTitle}>🏗️ Construindo sua Carteira</Text>
-          <View style={styles.tipCard}>
-            <Text style={styles.tipText}>6. <Text style={styles.highlight}>Diversifique seus investimentos:</Text> Combine renda fixa, variável e outros ativos conforme seu perfil.</Text>
-            <Text style={styles.tipText}>7. <Text style={styles.highlight}>Entenda onde você investe:</Text> Não aplique em nada que você não compreenda minimamente.</Text>
-            <Text style={styles.tipText}>8. <Text style={styles.highlight}>Considere os custos:</Text> Taxas de administração, corretagem e impostos impactam o resultado final.</Text>
-            <Text style={styles.tipText}>9. <Text style={styles.highlight}>Reinvista os dividendos/rendimentos:</Text> Acelera o efeito dos juros compostos.</Text>
-            <Text style={styles.tipText}>10. <Text style={styles.highlight}>Aportes regulares são chave:</Text> Crie o hábito de investir mensalmente, mesmo que seja pouco.</Text>
-          </View>
-
-          <Text style={styles.subSectionTitle}>📊 Monitoramento e Ajustes</Text>
-          <View style={styles.tipCard}>
-            <Text style={styles.tipText}>11. <Text style={styles.highlight}>Revise sua carteira periodicamente:</Text> A cada 6 meses ou 1 ano, veja se precisa de ajustes.</Text>
-            <Text style={styles.tipText}>12. <Text style={styles.highlight}>Não entre em pânico com volatilidade:</Text> Mercados sobem e descem. Mantenha a estratégia.</Text>
-            <Text style={styles.tipText}>13. <Text style={styles.highlight}>Aprenda com os erros:</Text> Todo investidor comete erros. O importante é o aprendizado.</Text>
-            <Text style={styles.tipText}>14. <Text style={styles.highlight}>Cuidado com "dicas quentes":</Text> Desconfie de promessas de ganhos fáceis e rápidos.</Text>
-            <Text style={styles.tipText}>15. <Text style={styles.highlight}>Acompanhe notícias, mas filtre ruídos:</Text> Mantenha-se informado, mas não tome decisões por impulso.</Text>
-          </View>
-
-          <Text style={styles.subSectionTitle}>🧠 Atitudes e Mentalidade</Text>
-          <View style={styles.tipCard}>
-            <Text style={styles.tipText}>16. <Text style={styles.highlight}>Paciência é uma virtude:</Text> Resultados consistentes levam tempo.</Text>
-            <Text style={styles.tipText}>17. <Text style={styles.highlight}>Educação financeira contínua:</Text> O aprendizado nunca para. Leia livros, artigos, faça cursos.</Text>
-            <Text style={styles.tipText}>18. <Text style={styles.highlight}>Não se compare com outros:</Text> Cada jornada financeira é única. Foque nos seus objetivos.</Text>
-            <Text style={styles.tipText}>19. <Text style={styles.highlight}>Celebre as pequenas vitórias:</Text> Reconheça seu progresso para manter a motivação.</Text>
-            <Text style={styles.tipText}>20. <Text style={styles.highlight}>Busque ajuda se necessário:</Text> Consultores financeiros podem auxiliar, especialmente no início.</Text>
-          </View>
-
-          <Text style={styles.sectionTitle}>📜 Frase Final</Text>
-          <View style={styles.quoteContainer}>
-            <Text style={styles.quoteText}>
-              "A verdadeira liberdade financeira não se encontra em promessas de riqueza fácil, 
-              mas no poder de entender o que poucos explicam. Investir não é seguir modismos - 
-              é escolher com consciência o que faz sentido pra você. Cada decisão é uma semente, 
-              e o tempo é o terreno onde ela frutifica. Só colhe bons frutos quem recusa o óbvio, 
-              questiona o que escuta e constrói com propósito. Não caia em promessas fáceis, 
-              caia na real. Riqueza de verdade nasce de paciência, estratégia e coragem pra 
-              pensar por conta própria."
+          <View style={[dynamicStyles.infoBox, { backgroundColor: COLORS.surface }]}>
+            <Text style={dynamicStyles.infoTitle}>🎯 O que você vai aprender:</Text>
+            <Text style={dynamicStyles.infoText}>
+              • Estratégia de <Text style={dynamicStyles.highlight}>Escada de Vencimentos</Text> para renda fixa{'\n'}
+              • <Text style={dynamicStyles.highlight}>20 dicas práticas</Text> testadas no mercado{'\n'}
+              • Como planejar objetivos financeiros específicos{'\n'}
+              • Técnicas de otimização de carteira
             </Text>
           </View>
-
-          <View style={styles.navigationButtons}>
+          
+          <Text style={[dynamicStyles.sectionTitle, { color: COLORS.text }]}>🪜 Estratégia: Escada de Vencimentos</Text>
+          
+          <Text style={[dynamicStyles.paragraph, { color: COLORS.text }]}>
+            A <Text style={dynamicStyles.highlight}>Escada de Vencimentos</Text> é uma técnica inteligente 
+            para investimentos em renda fixa. Ao invés de aplicar todo o dinheiro em um só prazo, 
+            você divide o valor em parcelas com vencimentos escalonados.
+          </Text>
+          
+          <View style={dynamicStyles.benefitsContainer}>
+            <View style={dynamicStyles.benefitCard}>
+              <Text style={dynamicStyles.benefitTitle}>📈 Maior Rentabilidade</Text>
+              <Text style={dynamicStyles.benefitDescription}>
+                Prazos maiores geralmente oferecem taxas melhores, aumentando seu 
+                retorno médio sem comprometer toda a liquidez.
+              </Text>
+            </View>
+            
+            <View style={dynamicStyles.benefitCard}>
+              <Text style={dynamicStyles.benefitTitle}>🔄 Flexibilidade</Text>
+              <Text style={dynamicStyles.benefitDescription}>
+                A cada vencimento, você pode reinvestir ou usar o dinheiro, 
+                adaptando-se às mudanças do mercado e suas necessidades.
+              </Text>
+            </View>
+            
+            <View style={dynamicStyles.benefitCard}>
+              <Text style={dynamicStyles.benefitTitle}>⚖️ Gestão de Risco</Text>
+              <Text style={dynamicStyles.benefitDescription}>
+                Reduz o risco de concentrar todo investimento em um momento ou 
+                taxa específica do mercado.
+              </Text>
+            </View>
+            
+            <View style={dynamicStyles.benefitCard}>
+              <Text style={dynamicStyles.benefitTitle}>🎯 Disciplina</Text>
+              <Text style={dynamicStyles.benefitDescription}>
+                Força você a pensar no longo prazo enquanto mantém acesso 
+                regular a parte dos recursos.
+              </Text>
+            </View>
+          </View>
+          
+          <View style={dynamicStyles.exampleContainer}>
+            <Text style={dynamicStyles.exampleTitle}>💡 Como funciona na prática:</Text>
+            <Text style={dynamicStyles.exampleText}>
+              <Text style={dynamicStyles.highlight}>Exemplo:</Text> Você tem R$ 10.000 para investir. 
+              Ao invés de aplicar tudo em um CDB de 2 anos, você divide:{'\n\n'}
+              
+              • R$ 2.000 → CDB 1 ano (taxa menor, mas liquidez antes){'\n'}
+              • R$ 2.000 → CDB 2 anos{'\n'}
+              • R$ 2.000 → CDB 3 anos{'\n'}
+              • R$ 2.000 → CDB 4 anos{'\n'}
+              • R$ 2.000 → CDB 5 anos (taxa maior){'\n\n'}
+              
+              Resultado: Rentabilidade média maior + um vencimento por ano para reinvestir ou usar.
+            </Text>
+          </View>
+          
+          <Text style={[dynamicStyles.paragraph, { color: COLORS.text }]}>
+            Use o simulador abaixo para testar como a Escada de Vencimentos pode 
+            funcionar com seus valores:
+          </Text>
+          
+          <LadderInvestmentSimulator />
+          
+          <Text style={[dynamicStyles.sectionTitle, { color: COLORS.text }]}>🎯 Planejamento de Objetivos</Text>
+          
+          <Text style={[dynamicStyles.paragraph, { color: COLORS.text }]}>
+            Investir sem objetivo é como viajar sem destino. Cada meta financeira 
+            requer uma estratégia específica de prazo, risco e liquidez.
+          </Text>
+          
+          <View style={dynamicStyles.objectivesContainer}>
+            <View style={dynamicStyles.objectiveCard}>
+              <Text style={dynamicStyles.objectiveTitle}>🏠 Casa Própria (5-10 anos)</Text>
+              <Text style={dynamicStyles.objectiveStrategy}>
+                <Text style={dynamicStyles.highlight}>Estratégia:</Text> 70% renda fixa (Tesouro IPCA+, CDBs longos) 
+                + 30% renda variável (ETFs, ações){'\n'}
+                <Text style={dynamicStyles.highlight}>Foco:</Text> Proteção contra inflação e crescimento moderado
+              </Text>
+            </View>
+            
+            <View style={dynamicStyles.objectiveCard}>
+              <Text style={dynamicStyles.objectiveTitle}>🎓 Educação dos Filhos (10-18 anos)</Text>
+              <Text style={dynamicStyles.objectiveStrategy}>
+                <Text style={dynamicStyles.highlight}>Estratégia:</Text> 50% renda fixa + 50% renda variável{'\n'}
+                <Text style={dynamicStyles.highlight}>Foco:</Text> Crescimento real do patrimônio acima da inflação educacional
+              </Text>
+            </View>
+            
+            <View style={dynamicStyles.objectiveCard}>
+              <Text style={dynamicStyles.objectiveTitle}>🌴 Aposentadoria (20+ anos)</Text>
+              <Text style={dynamicStyles.objectiveStrategy}>
+                <Text style={dynamicStyles.highlight}>Estratégia:</Text> 30% renda fixa + 70% renda variável (diminuindo o % de RV conforme se aproxima){'\n'}
+                <Text style={dynamicStyles.highlight}>Foco:</Text> Máximo crescimento no longo prazo
+              </Text>
+            </View>
+            
+            <View style={dynamicStyles.objectiveCard}>
+              <Text style={dynamicStyles.objectiveTitle}>✈️ Viagem (1-3 anos)</Text>
+              <Text style={dynamicStyles.objectiveStrategy}>
+                <Text style={dynamicStyles.highlight}>Estratégia:</Text> 100% renda fixa (CDBs, Tesouro pré-fixado){'\n'}
+                <Text style={dynamicStyles.highlight}>Foco:</Text> Segurança e previsibilidade do valor final
+              </Text>
+            </View>
+          </View>
+          
+          <Text style={[dynamicStyles.paragraph, { color: COLORS.text }]}>
+            Use o planejador abaixo para calcular quanto precisará investir mensalmente 
+            para atingir seus objetivos:
+          </Text>
+          
+          <FinancialGoalPlanner />
+          
+          <Text style={[dynamicStyles.sectionTitle, { color: COLORS.text }]}>🧠 Estratégias Comportamentais</Text>
+          
+          <View style={dynamicStyles.behaviorContainer}>
+            <View style={dynamicStyles.behaviorCard}>
+              <Text style={dynamicStyles.behaviorTitle}>1. 🔄 Automatização Total</Text>
+              <Text style={dynamicStyles.behaviorDescription}>
+                Configure tudo no automático: débito do salário, transferência para investimentos, 
+                e até rebalanceamento da carteira. Isso elimina decisões emocionais.
+              </Text>
+            </View>
+            
+            <View style={dynamicStyles.behaviorCard}>
+              <Text style={dynamicStyles.behaviorTitle}>2. 📅 Regra do "Dia do Investimento"</Text>
+              <Text style={dynamicStyles.behaviorDescription}>
+                Escolha um dia do mês para revisar investimentos e fazer aportes. 
+                Não olhe no resto do tempo. Isso reduz ansiedade e decisões impulsivas.
+              </Text>
+            </View>
+            
+            <View style={dynamicStyles.behaviorCard}>
+              <Text style={dynamicStyles.behaviorTitle}>3. 💰 Estratégia dos Aumentos</Text>
+              <Text style={dynamicStyles.behaviorDescription}>
+                Sempre que receber aumento ou promoção, direcione 50% do valor extra 
+                para investimentos antes de se acostumar com o novo padrão de vida.
+              </Text>
+            </View>
+            
+            <View style={dynamicStyles.behaviorCard}>
+              <Text style={dynamicStyles.behaviorTitle}>4. 🎯 Metas Visuais</Text>
+              <Text style={dynamicStyles.behaviorDescription}>
+                Crie gráficos ou planilhas que mostrem seu progresso visualmente. 
+                Ver o patrimônio crescer motiva a continuar investindo com disciplina.
+              </Text>
+            </View>
+          </View>
+          
+          <Text style={[dynamicStyles.sectionTitle, { color: COLORS.text }]}>⚡ Estratégias para Cenários Especiais</Text>
+          
+          <View style={dynamicStyles.scenarioContainer}>
+            <View style={dynamicStyles.scenarioCard}>
+              <Text style={dynamicStyles.scenarioTitle}>📉 Durante Crises</Text>
+              <Text style={dynamicStyles.scenarioText}>
+                • Mantenha a calma e continue os aportes regulares{'\n'}
+                • Se tiver reserva extra, considere aumentar aportes (comprar mais barato){'\n'}
+                • Evite pânico e vendas precipitadas{'\n'}
+                • Crises são temporárias, seus objetivos de longo prazo não mudaram
+              </Text>
+            </View>
+            
+            <View style={dynamicStyles.scenarioCard}>
+              <Text style={dynamicStyles.scenarioTitle}>📈 Durante Euforias</Text>
+              <Text style={dynamicStyles.scenarioText}>
+                • Não se deixe levar pelo otimismo exagerado{'\n'}
+                • Continue sua estratégia definida{'\n'}
+                • Evite aumentar risco além do planejado{'\n'}
+                • Use ganhos extras para rebalancear a carteira
+              </Text>
+            </View>
+            
+            <View style={dynamicStyles.scenarioCard}>
+              <Text style={dynamicStyles.scenarioTitle}>💼 Mudança de Emprego</Text>
+              <Text style={dynamicStyles.scenarioText}>
+                • Reavalie sua capacidade de aporte{'\n'}
+                • Considere resgatar FGTS para quitar dívidas ou investir{'\n'}
+                • Ajuste estratégia se a renda mudou significativamente{'\n'}
+                • Mantenha reserva de emergência reforçada
+              </Text>
+            </View>
+          </View>
+          
+          <View style={dynamicStyles.conclusionContainer}>
+            <Text style={dynamicStyles.conclusionTitle}>🏆 Conclusão do Curso</Text>
+            <Text style={dynamicStyles.conclusionText}>
+              Parabéns! Você completou todos os 8 capítulos de "Investindo com Sabedoria". 
+              Agora você tem conhecimento para:
+            </Text>
+            
+            <View style={dynamicStyles.achievementsList}>
+              <Text style={dynamicStyles.achievement}>✅ Começar a investir com segurança</Text>
+              <Text style={dynamicStyles.achievement}>✅ Diversificar sua carteira de forma inteligente</Text>
+              <Text style={dynamicStyles.achievement}>✅ Entender riscos e retornos</Text>
+              <Text style={dynamicStyles.achievement}>✅ Otimizar impostos legalmente</Text>
+              <Text style={dynamicStyles.achievement}>✅ Planejar objetivos financeiros</Text>
+              <Text style={dynamicStyles.achievement}>✅ Aplicar estratégias comprovadas</Text>
+            </View>
+            
+            <Text style={dynamicStyles.nextStepsText}>
+              <Text style={dynamicStyles.highlight}>Próximos passos:</Text>{'\n'}
+              1. Abra conta em uma corretora confiável{'\n'}
+              2. Monte sua reserva de emergência{'\n'}
+              3. Comece com investimentos simples (Tesouro, CDB){'\n'}
+              4. Automatize seus aportes{'\n'}
+              5. Continue estudando e evoluindo
+            </Text>
+          </View>
+          
+          <View style={dynamicStyles.navigationButtons}>
             <TouchableOpacity 
-              style={[styles.navButton, styles.prevButton]}
+              style={[dynamicStyles.navButton, dynamicStyles.prevButton]}
               onPress={() => navigation.navigate('Chapter7')}
             >
-              <Text style={styles.prevButtonText}>← Capítulo 7</Text>
+              <Text style={dynamicStyles.prevButtonText}>← Capítulo 7</Text>
             </TouchableOpacity>
             
             <TouchableOpacity 
-              style={[styles.navButton, styles.nextButton]}
-              onPress={() => navigation.navigate('Home')}
+              style={[dynamicStyles.navButton, dynamicStyles.nextButton]}
+              onPress={() => navigation.navigate('Chapter9')}
             >
-              <Text style={styles.nextButtonText}>Voltar ao Início 🏠</Text>
+              <Text style={dynamicStyles.nextButtonText}>Módulo 3 →</Text>
             </TouchableOpacity>
           </View>
+
+          {/* Destaque especial para Módulo 3 */}
+          <TouchableOpacity 
+            style={dynamicStyles.specialNextButton}
+            onPress={() => navigation.navigate('Chapter9')}
+          >
+            <Text style={dynamicStyles.specialNextTitle}>🚀 Módulo 3: Ferramentas Avançadas</Text>
+            <Text style={dynamicStyles.specialNextSubtitle}>Metas • Carteira • Relatórios Premium</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.white,
-  },
-  headerContainer: {
-    backgroundColor: COLORS.primaryDark,
-    padding: 20,
-    alignItems: 'center',
-  },
-  headerTitle: {
-    color: COLORS.white,
-    fontSize: 24,
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-  },
-  headerSubtitle: {
-    color: COLORS.white,
-    fontSize: 16,
-    marginTop: 5,
-    textAlign: 'center',
-  },
-  contentContainer: {
-    padding: 15,
-  },
-  mainSectionTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: COLORS.primaryDark,
-    textAlign: 'center',
-    marginBottom: 25,
-    marginTop: 15,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: COLORS.primaryDark,
-    marginBottom: 15,
-    marginTop: 10,
-  },
-  subSectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: COLORS.secondaryDark, // Using a secondary color for subsection titles
-    marginTop: 20,
-    marginBottom: 10,
-    paddingBottom: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.primaryLight,
-  },
-  paragraph: {
-    fontSize: 16,
-    lineHeight: 24,
-    color: COLORS.black,
-    marginBottom: 20,
-  },
-  highlight: {
-    fontWeight: 'bold',
-    color: COLORS.primaryDark,
-  },
-  pillarCard: {
-    backgroundColor: '#f9f9f9',
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 15,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
-  pillarNumber: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: COLORS.primaryDark,
-    marginRight: 10,
-  },
-  pillarText: {
-    fontSize: 15,
-    lineHeight: 22,
-    flex: 1,
-  },
-  tipCard: {
-    backgroundColor: COLORS.white,
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 15,
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 1 },
-    // shadowOpacity: 0.05,
-    // shadowRadius: 2,
-    // elevation: 1,
-  },
-  tipText: {
-    fontSize: 15,
-    lineHeight: 22,
-    marginBottom: 8,
-    color: '#333',
-  },
-  quoteContainer: {
-    backgroundColor: COLORS.primaryLight,
-    borderRadius: 8,
-    padding: 20,
-    marginVertical: 20,
-    borderLeftWidth: 5,
-    borderLeftColor: COLORS.primaryDark,
-  },
-  quoteText: {
-    fontSize: 16,
-    fontStyle: 'italic',
-    lineHeight: 24,
-    color: COLORS.primaryDark,
-    textAlign: 'center',
-  },
-  navigationButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 20,
-    marginBottom: 30,
-  },
-  navButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    width: '48%',
-    alignItems: 'center',
-    elevation: 2, // For Android shadow
-    shadowColor: '#000', // For iOS shadow
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-  },
-  prevButton: {
-    backgroundColor: '#e0e0e0', // Lighter gray for previous
-  },
-  prevButtonText: {
-    fontWeight: 'bold',
-    color: '#333',
-    fontSize: 15,
-  },
-  nextButton: {
-    backgroundColor: COLORS.primaryDark,
-  },
-  nextButtonText: {
-    fontWeight: 'bold',
-    color: COLORS.white,
-    fontSize: 15,
-  },
-});
 
 export default Chapter8Screen;

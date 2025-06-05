@@ -4,25 +4,30 @@ import {
   Text, 
   StyleSheet, 
   TouchableOpacity,
-  Dimensions,
-  ScrollView
+  Dimensions
 } from 'react-native';
 import { COLORS } from '../styles/globalStyles';
 
-// Componente para renderizar barras de gráfico
-const BarChart = ({ data, maxValue, barColor, barWidth }) => {
+const { width: screenWidth } = Dimensions.get('window');
+
+// Componente para renderizar barras de gráfico - SEM ScrollView horizontal
+const BarChart = ({ data, maxValue, barColor }) => {
+  // Calcula largura das barras baseado no espaço disponível
+  const containerWidth = screenWidth - 60; // Margem das bordas
+  const barWidth = Math.max(25, Math.floor((containerWidth - 30) / data.length) - 8);
+  
   return (
     <View style={styles.barChartContainer}>
       {data.map((item, index) => {
-        // Calcula a altura relativa da barra (mínimo 5% para visibilidade)
-        const barHeight = Math.max((item.value / maxValue) * 100, 5);
+        // Calcula a altura relativa da barra (mínimo 8% para visibilidade)
+        const barHeight = Math.max((item.value / maxValue) * 100, 8);
         
         return (
-          <View key={index} style={styles.barContainer}>
+          <View key={index} style={[styles.barContainer, { width: barWidth + 16 }]}>
             {/* Valor acima da barra */}
             <View style={styles.barValueContainer}>
-              <Text style={styles.barValue}>
-                {item.displayValue}
+              <Text style={[styles.barValue, { fontSize: Math.min(10, barWidth / 3) }]}>
+                {item.compactValue || item.displayValue}
               </Text>
             </View>
             
@@ -34,7 +39,7 @@ const BarChart = ({ data, maxValue, barColor, barWidth }) => {
                   { 
                     height: `${barHeight}%`,
                     backgroundColor: barColor,
-                    width: barWidth || 30,
+                    width: barWidth,
                   }
                 ]} 
               />
@@ -42,8 +47,8 @@ const BarChart = ({ data, maxValue, barColor, barWidth }) => {
             
             {/* Label abaixo da barra */}
             <View style={styles.barLabelContainer}>
-              <Text style={styles.barLabel}>
-                {item.label}
+              <Text style={[styles.barLabel, { fontSize: Math.min(11, barWidth / 2.5) }]}>
+                {item.shortLabel || item.label}
               </Text>
             </View>
           </View>
@@ -53,7 +58,7 @@ const BarChart = ({ data, maxValue, barColor, barWidth }) => {
   );
 };
 
-// Componente principal para visualizar crescimento
+// Componente principal para visualizar crescimento - CORRIGIDO SEM NESTED SCROLL
 const InvestmentGrowthChart = () => {
   // Estados para os parâmetros de investimento
   const [monthlyAmount, setMonthlyAmount] = useState(100);
@@ -65,7 +70,7 @@ const InvestmentGrowthChart = () => {
   // Opções pré-definidas
   const monthlyOptions = [30, 50, 100, 200, 500];
   const returnOptions = [6, 8, 10, 12];
-  const yearOptions = [5, 10, 20, 30, 40];
+  const yearOptions = [5, 10, 20, 30];
   
   // Calcula os dados de crescimento
   useEffect(() => {
@@ -75,11 +80,21 @@ const InvestmentGrowthChart = () => {
   const calculateGrowthData = () => {
     const data = [];
     const monthlyRate = annualReturn / 100 / 12;
-    const totalMonths = years * 12;
     
-    // Calcula o valor ao final de cada período de 5 anos
-    const intervals = [1, 5, 10, 15, 20, 30, 40];
-    intervals.filter(interval => interval <= years).forEach(interval => {
+    // Calcula intervalos baseados no período total (máximo 6 pontos para melhor visualização)
+    let intervals = [];
+    if (years <= 10) {
+      intervals = [1, 2, 5, years].filter(y => y <= years);
+    } else if (years <= 20) {
+      intervals = [1, 5, 10, 15, years].filter(y => y <= years);
+    } else {
+      intervals = [1, 5, 10, 20, years].filter((y, i, arr) => arr.indexOf(y) === i);
+    }
+    
+    // Remove duplicatas e ordena
+    intervals = [...new Set(intervals)].sort((a, b) => a - b);
+    
+    intervals.forEach(interval => {
       const months = interval * 12;
       let futureValue = initialAmount;
       let totalInvested = initialAmount;
@@ -93,9 +108,11 @@ const InvestmentGrowthChart = () => {
       
       data.push({
         label: `${interval} ${interval === 1 ? 'ano' : 'anos'}`,
+        shortLabel: `${interval}a`,
         value: futureValue,
         displayValue: formatCurrency(futureValue),
-        totalInvested: formatCurrency(totalInvested),
+        compactValue: formatCompactCurrency(futureValue),
+        totalInvested: formatCurrency(totalInvested),  
         returns: formatCurrency(returns),
         returnsPercentage: ((returns / totalInvested) * 100).toFixed(0)
       });
@@ -109,9 +126,20 @@ const InvestmentGrowthChart = () => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     }).format(value);
+  };
+  
+  // Formata valores monetários de forma compacta para o gráfico
+  const formatCompactCurrency = (value) => {
+    if (value >= 1000000) {
+      return `R$${(value / 1000000).toFixed(1)}M`;
+    } else if (value >= 1000) {
+      return `R$${(value / 1000).toFixed(0)}K`;
+    } else {
+      return `R$${value.toFixed(0)}`;
+    }
   };
   
   // Encontra o maior valor para dimensionar o gráfico
@@ -203,17 +231,17 @@ const InvestmentGrowthChart = () => {
         </View>
       </View>
       
+      {/* GRÁFICO SEM SCROLL HORIZONTAL - CORRIGIDO */}
       {growthData.length > 0 && (
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <View style={styles.chartWrapper}>
           <View style={styles.chartContainer}>
             <BarChart 
               data={growthData} 
               maxValue={maxValue} 
               barColor={COLORS.primaryDark}
-              barWidth={50}
             />
           </View>
-        </ScrollView>
+        </View>
       )}
       
       {growthData.length > 0 && (
@@ -332,56 +360,57 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontWeight: 'bold',
   },
-  chartContainer: {
-    height: 300,
+  chartWrapper: {
     marginVertical: 20,
-    paddingBottom: 40,
-    paddingTop: 30,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 8,
+    padding: 10,
+  },
+  chartContainer: {
+    height: 260,
+    paddingBottom: 30,
+    paddingTop: 20,
+    width: '100%',
   },
   barChartContainer: {
     height: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     alignItems: 'flex-end',
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
   },
   barContainer: {
     alignItems: 'center',
-    marginHorizontal: 5,
     height: '100%',
     justifyContent: 'space-between',
   },
   barWrapper: {
-    height: '70%',
+    height: '65%',
     justifyContent: 'flex-end',
     alignItems: 'center',
     position: 'relative',
   },
   bar: {
-    width: 30,
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
-    minHeight: 5,
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+    minHeight: 8,
   },
   barLabelContainer: {
-    width: 70,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 8,
+    height: 20,
   },
   barLabel: {
-    fontSize: 11,
-    color: '#666',
+    color: COLORS.textSecondary,
     textAlign: 'center',
     fontWeight: '500',
   },
   barValueContainer: {
-    width: 80,
     alignItems: 'center',
     marginBottom: 8,
-    minHeight: 20,
+    minHeight: 24,
   },
   barValue: {
-    fontSize: 10,
     fontWeight: 'bold',
     color: COLORS.primaryDark,
     textAlign: 'center',
@@ -403,15 +432,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
+    flexWrap: 'wrap',
   },
   detailLabel: {
     fontSize: 15,
     color: '#555',
+    flex: 1,
   },
   detailValue: {
     fontSize: 15,
     fontWeight: 'bold',
     color: '#444',
+    textAlign: 'right',
   },
   highlightValue: {
     color: COLORS.primaryDark,

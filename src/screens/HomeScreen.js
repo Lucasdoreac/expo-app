@@ -29,6 +29,24 @@ const HomeScreen = ({ navigation }) => {
           </Text>
         </View>
         
+        {/* Banner Ferramentas Avançadas */}
+        <TouchableOpacity 
+          style={styles.premiumBanner}
+          onPress={() => {
+            console.log('Banner Premium clicado - Navegando para Chapter9');
+            navigation.navigate('Chapter9');
+          }}
+        >
+          <View style={styles.premiumBannerContent}>
+            <Text style={styles.premiumBannerIcon}>🚀⭐</Text>
+            <View style={styles.premiumBannerText}>
+              <Text style={styles.premiumBannerTitle}>FERRAMENTAS AVANÇADAS</Text>
+              <Text style={styles.premiumBannerSubtitle}>Calculadoras Premium • Metas • Relatórios</Text>
+            </View>
+            <Text style={styles.premiumBannerArrow}>▶️</Text>
+          </View>
+        </TouchableOpacity>
+        
         <Text style={styles.sectionTitle}>📚 Capítulos</Text>
         
         <TouchableOpacity 
@@ -119,6 +137,111 @@ const HomeScreen = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
 
+        <TouchableOpacity 
+          style={[styles.chapterCard, styles.conclusionChapter]}
+          onPress={() => navigation.navigate('Chapter6')}
+        >
+          <View style={styles.conclusionBadge}>
+            <Text style={styles.conclusionBadgeText}>📚 CONCLUSÃO</Text>
+          </View>
+          <Text style={styles.chapterNumber}>Capítulo 6</Text>
+          <Text style={styles.chapterTitle}>Fundos de Investimento + 20 Dicas Práticas</Text>
+          <Text style={styles.chapterDescription}>
+            Descubra como os fundos podem diversificar sua carteira e finalize com 20 dicas essenciais para investir com sabedoria.
+          </Text>
+        </TouchableOpacity>
+        
+        <Text style={styles.sectionTitle}>🎓 Módulos Extras - Aprofundamento</Text>
+        
+        <View style={styles.extrasContainer}>
+          <Text style={styles.extrasDescription}>
+            Conteúdo adicional para quem quer se aprofundar ainda mais no mundo dos investimentos.
+          </Text>
+        </View>
+
+        <TouchableOpacity 
+          style={[styles.chapterCard, styles.extraModule]}
+          onPress={() => navigation.navigate('Chapter7')}
+        >
+          <Text style={styles.chapterNumber}>Módulo Extra 1</Text>
+          <Text style={styles.chapterTitle}>Impostos e Tributação</Text>
+          <Text style={styles.chapterDescription}>
+            Aprenda a otimizar seus ganhos entendendo como funcionam os impostos nos investimentos.
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={[styles.chapterCard, styles.extraModule]}
+          onPress={() => navigation.navigate('Chapter8')}
+        >
+          <Text style={styles.chapterNumber}>Módulo Extra 2</Text>
+          <Text style={styles.chapterTitle}>Estratégias Práticas</Text>
+          <Text style={styles.chapterDescription}>
+            Implemente técnicas comprovadas para acelerar seu crescimento financeiro.
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={[styles.chapterCard, styles.premiumChapter]}
+          onPress={() => {
+            console.log('Navegando para Chapter9 - Ferramentas Avançadas');
+            navigation.navigate('Chapter9');
+          }}
+        >
+          <View style={styles.premiumBadge}>
+            <Text style={styles.premiumBadgeText}>⭐ PREMIUM</Text>
+          </View>
+          <Text style={styles.chapterNumber}>🚀 Módulo Extra 3</Text>
+          <Text style={[styles.chapterTitle, { color: '#FF6B6B', fontSize: 20 }]}>Ferramentas Avançadas</Text>
+          <Text style={styles.chapterDescription}>
+            Acesse calculadoras premium, sistema de metas, tracking de carteira e gerador de relatórios.
+          </Text>
+          <View style={styles.featureList}>
+            <Text style={styles.featureItem}>🎯 Sistema de metas pessoais</Text>
+            <Text style={styles.featureItem}>💼 Acompanhamento de carteira</Text>
+            <Text style={styles.featureItem}>📋 Relatórios personalizados</Text>
+            <Text style={styles.featureItem}>⭐ Integração premium hub</Text>
+          </View>
+          
+          {/* Acesso Rápido aos Relatórios - Temporariamente desabilitado */}
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#999',
+              paddingHorizontal: 15,
+              paddingVertical: 8,
+              borderRadius: 20,
+              marginTop: 10,
+              alignSelf: 'flex-start',
+              opacity: 0.6
+            }}
+            disabled={true}
+          >
+            <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold' }}>
+              📊 Ver Relatórios Salvos (Em Breve)
+            </Text>
+          </TouchableOpacity>
+
+          {/* Acesso Rápido ao Histórico Geral */}
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#E67E22',
+              paddingHorizontal: 15,
+              paddingVertical: 8,
+              borderRadius: 20,
+              marginTop: 8,
+              alignSelf: 'flex-start'
+            }}
+            onPress={(e) => {
+              e.stopPropagation();
+              navigation.navigate('History');
+            }}
+          >
+            <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold' }}>
+              📚 Histórico de Atividades
+            </Text>
+          </TouchableOpacity>
+        </TouchableOpacity>
+
         <View style={styles.tipContainer}>
           <Text style={styles.tipTitle}>💡 Dica Financeira</Text>
           <Text style={styles.tipText}>
@@ -182,6 +305,73 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
+  premiumChapter: {
+    borderWidth: 3,
+    borderColor: '#FF6B6B',
+    backgroundColor: '#FFF5F5',
+    shadowColor: '#FF6B6B',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  premiumBadge: {
+    position: 'absolute',
+    top: -8,
+    right: 8,
+    backgroundColor: '#FF6B6B',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 15,
+    shadowColor: '#FF6B6B',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 6,
+  },
+  premiumBadgeText: {
+    color: 'white',
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  conclusionChapter: {
+    borderLeftWidth: 4,
+    borderLeftColor: '#2ECC71',
+  },
+  conclusionBadge: {
+    position: 'absolute',
+    top: -5,
+    right: 10,
+    backgroundColor: '#2ECC71',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  conclusionBadgeText: {
+    color: 'white',
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  extrasContainer: {
+    backgroundColor: '#f8f9fa',
+    padding: 15,
+    marginHorizontal: 15,
+    marginBottom: 10,
+    borderRadius: 8,
+    borderLeftWidth: 4,
+    borderLeftColor: '#6C5CE7',
+  },
+  extrasDescription: {
+    fontSize: 14,
+    color: COLORS.textSecondary,
+    textAlign: 'center',
+    fontStyle: 'italic',
+  },
+  extraModule: {
+    borderLeftWidth: 4,
+    borderLeftColor: '#6C5CE7',
+    backgroundColor: '#fafbfc',
+  },
   chapterNumber: {
     color: COLORS.primaryDark,
     fontWeight: 'bold',
@@ -196,8 +386,18 @@ const styles = StyleSheet.create({
   },
   chapterDescription: {
     fontSize: 14,
-    color: '#666',
+    color: COLORS.textSecondary,
     lineHeight: 20,
+    marginBottom: 10,
+  },
+  featureList: {
+    marginTop: 5,
+  },
+  featureItem: {
+    fontSize: 12,
+    color: '#4ECDC4',
+    marginBottom: 3,
+    fontWeight: '500',
   },
   tipContainer: {
     backgroundColor: COLORS.primaryLight,
@@ -219,6 +419,46 @@ const styles = StyleSheet.create({
   highlight: {
     fontWeight: 'bold',
     color: COLORS.primaryDark,
+  },
+  premiumBanner: {
+    backgroundColor: 'linear-gradient(135deg, #FF6B6B, #FF8E53)',
+    backgroundColor: '#FF6B6B',
+    borderRadius: 12,
+    margin: 15,
+    marginBottom: 20,
+    shadowColor: '#FF6B6B',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  premiumBannerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+  },
+  premiumBannerIcon: {
+    fontSize: 24,
+    marginRight: 12,
+  },
+  premiumBannerText: {
+    flex: 1,
+  },
+  premiumBannerTitle: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 2,
+  },
+  premiumBannerSubtitle: {
+    color: '#FFE5E5',
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  premiumBannerArrow: {
+    color: '#FFF',
+    fontSize: 18,
+    opacity: 0.8,
   },
 });
 

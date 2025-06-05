@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 14,
     fontStyle: 'italic',
-    color: '#666',
+    color: COLORS.textSecondary,
     textAlign: 'center',
     marginBottom: 20,
   },
@@ -358,7 +358,7 @@ const styles = StyleSheet.create({
   },
   tradeoff: {
     fontSize: 13,
-    color: '#666',
+    color: COLORS.textSecondary,
   },
   tradeoffLabel: {
     fontWeight: 'bold',

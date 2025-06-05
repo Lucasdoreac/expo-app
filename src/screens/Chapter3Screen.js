@@ -8,8 +8,8 @@ import {
   SafeAreaView
 } from 'react-native';
 import { COLORS, globalStyles } from '../styles/globalStyles';
+import { useLegacyColors } from '../contexts/ThemeContext';
 import InvestorProfileQuiz from '../components/InvestorProfileQuiz';
-import RiskReturnLiquidity from '../components/RiskReturnLiquidity';
 
 const Chapter3Screen = ({ navigation }) => {
   const [userProfile, setUserProfile] = useState(null);
@@ -19,7 +19,7 @@ const Chapter3Screen = ({ navigation }) => {
   };
   
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: COLORS.background }]}>
       <ScrollView 
         contentContainerStyle={{paddingBottom: 50}}
         style={{flex: 1, width: '100%'}}
@@ -30,13 +30,13 @@ const Chapter3Screen = ({ navigation }) => {
         </View>
         
         <View style={styles.contentContainer}>
-          <Text style={styles.paragraph}>
+          <Text style={[styles.paragraph, { color: COLORS.text }]}>
             Antes de começar a investir, é fundamental conhecer seu perfil de investidor. 
             Isso ajuda a alinhar seus investimentos com seus objetivos, temperamento e 
             situação financeira, evitando decisões que possam gerar arrependimento.
           </Text>
           
-          <View style={styles.infoBox}>
+          <View style={[styles.infoBox, { backgroundColor: COLORS.surface }]}>
             <Text style={styles.infoTitle}>🎓 Por que conhecer seu perfil é importante?</Text>
             <Text style={styles.infoText}>
               Investir de forma incompatível com seu perfil pode levar a:
@@ -47,8 +47,8 @@ const Chapter3Screen = ({ navigation }) => {
             </Text>
           </View>
           
-          <Text style={styles.sectionTitle}>📊 Descubra Seu Perfil de Investidor</Text>
-          <Text style={styles.paragraph}>
+          <Text style={[styles.sectionTitle, { color: COLORS.text }]}>📊 Descubra Seu Perfil de Investidor</Text>
+          <Text style={[styles.paragraph, { color: COLORS.text }]}>
             Responda às perguntas abaixo com honestidade. Este questionário irá avaliar sua 
             tolerância ao risco, horizonte de investimento e objetivos financeiros para 
             determinar seu perfil.
@@ -57,45 +57,7 @@ const Chapter3Screen = ({ navigation }) => {
           {/* Componente de Questionário de Perfil */}
           <InvestorProfileQuiz onProfileDetermined={handleProfileDetermined} />
           
-          <Text style={styles.sectionTitle}>🔄 A Tríade Risco-Retorno-Liquidez</Text>
-          <Text style={styles.paragraph}>
-            <Text style={styles.highlight}>Todo investimento tem três dimensões fundamentais</Text> que precisam 
-            ser equilibradas. Entender essa tríade é essencial para fazer escolhas conscientes.
-          </Text>
-          
-          <View style={styles.triadExplanation}>
-            <View style={styles.triadItem}>
-              <Text style={styles.triadTitle}>Risco</Text>
-              <Text style={styles.triadDescription}>
-                Chance de perder parte do capital ou obter retorno diferente do esperado.
-              </Text>
-            </View>
-            
-            <View style={styles.triadItem}>
-              <Text style={styles.triadTitle}>Retorno</Text>
-              <Text style={styles.triadDescription}>
-                Ganho potencial que o investimento pode proporcionar ao longo do tempo.
-              </Text>
-            </View>
-            
-            <View style={styles.triadItem}>
-              <Text style={styles.triadTitle}>Liquidez</Text>
-              <Text style={styles.triadDescription}>
-                Facilidade de converter o investimento em dinheiro sem perder valor.
-              </Text>
-            </View>
-          </View>
-          
-          <Text style={styles.paragraph}>
-            <Text style={styles.highlight}>Não existem investimentos perfeitos</Text> que maximizem as 
-            três dimensões simultaneamente. É necessário escolher suas prioridades com base em seus 
-            objetivos e perfil.
-          </Text>
-          
-          {/* Componente de Ajuste da Tríade */}
-          <RiskReturnLiquidity />
-          
-          <Text style={styles.sectionTitle}>📈 Estratégias para Cada Perfil</Text>
+          <Text style={[styles.sectionTitle, { color: COLORS.text }]}>📈 Estratégias para Cada Perfil</Text>
           
           <View style={styles.profileStrategies}>
             <View style={[styles.strategyCard, styles.conservativeCard]}>
@@ -218,28 +180,6 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 16,
     lineHeight: 24,
-  },
-  triadExplanation: {
-    flexDirection: 'column',
-    marginBottom: 20,
-  },
-  triadItem: {
-    backgroundColor: '#f9f9f9',
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 10,
-    borderLeftWidth: 4,
-    borderLeftColor: COLORS.primaryDark,
-  },
-  triadTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: COLORS.primaryDark,
-    marginBottom: 5,
-  },
-  triadDescription: {
-    fontSize: 15,
-    lineHeight: 22,
   },
   profileStrategies: {
     marginBottom: 20,

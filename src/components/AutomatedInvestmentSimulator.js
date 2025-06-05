@@ -3,8 +3,7 @@ import {
   View, 
   Text, 
   StyleSheet,
-  TouchableOpacity,
-  ScrollView
+  TouchableOpacity
 } from 'react-native';
 import { COLORS } from '../styles/globalStyles';
 
@@ -311,7 +310,7 @@ const AutomatedInvestmentSimulator = () => {
         )}
       </View>
       
-      <ScrollView style={styles.resultsContainer}>
+      <View style={styles.resultsContainer}>
         <View style={styles.resultSection}>
           <Text style={styles.resultTitle}>Distribuição dos Aportes</Text>
           <MonthsVisualizer 
@@ -370,7 +369,7 @@ const AutomatedInvestmentSimulator = () => {
             <Text style={styles.highlight}>Investir mensalmente é como plantar uma semente por mês.</Text> Quando o processo é automatizado, você garante que seu "jardim financeiro" receba novas sementes regularmente, sem depender da sua memória ou disciplina.
           </Text>
         </View>
-      </ScrollView>
+      </View>
     </View>
   );
 };
@@ -604,7 +603,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primaryLight,
     borderRadius: 8,
     padding: 15,
-    marginBottom: 10,
+    marginBottom: 40, // Aumentado de 10 para 40 - mais espaço após card azul
   },
   insightTitle: {
     fontSize: 16,
